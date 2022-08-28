@@ -1,0 +1,29 @@
+syntax = "proto3";
+package pbclient;
+option go_package = "roomcell/pkg/pb/pbclient";
+
+message RoleInfo 
+{
+    int64 RoleID = 1;
+    int32 Level = 2;
+    string Name = 3;
+    int32 Icon = 4;
+}
+
+// ECMsgPlayerLoginHall = 1 // 登录大厅
+message ECMsgPlayerLoginHallReq
+{
+    string Token = 1;
+}
+message ECMsgPlayerLoginHallRsp
+{
+    RoleInfo RoleData = 1;
+}
+
+// ECMsgPlayerKeepHeart = 2 // 心跳
+message ECMsgPlayerKeepHeartReq
+{
+}
+message ECMsgPlayerKeepHeartRsp
+{
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+package pbserver;
+option go_package = "./pbserver";
+
+// 表数据
+message DbTableData
+{
+    int32 TableID = 1;  // 表id
+    bytes Data = 2;     // 数据 tbobj对象
+}

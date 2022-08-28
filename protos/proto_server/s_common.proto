@@ -1,0 +1,25 @@
+syntax = "proto3";
+package pbserver;
+option go_package = "./pbserver";
+
+// 表数据
+message NetNode
+{
+    int32 ZoneID = 1;
+    int32 NodeType = 2;
+    int32 NodeIndex = 3;
+}
+
+// 服务器节点信息
+message ServerNodeInfo
+{
+    int32 ZoneID = 1;
+    int32 NodeType = 2;
+    int32 NodeIndex = 3;
+}
+// 服务器用房间玩家信息
+message RoomPlayerData
+{
+    int64 RoleID = 1;
+    string Nickname = 2;
+}

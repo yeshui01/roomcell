@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package pbserver;
+import "proto_client/c_player.proto";
+import "s_db.proto";
+import "s_common.proto";
+option go_package = "./pbserver";
+
+
+// 角色数据
+message HallRoleData
+{
+    repeated DbTableData RoleTables = 1;    // 角色相关的表 
+}
+
+// 创角数据
+message CreateRoleInfo
+{
+    string Account = 1;
+    string CchId = 2;
+    int32 Level = 3;
+    int64 UserID = 4;
+}
+// ESMsgPlayerLoadRole = 1 // 加载角色数据
+message ESMsgPlayerLoadRoleReq
+{
+    int64 RoleID = 1;
+    bool WithCreate = 2;    // 如果不存在就创建
+    CreateRoleInfo CreateParam = 3; // 创角参数
+}
+message ESMsgPlayerLoadRoleRep
+{
+    HallRoleData RoleDetailData = 1;    // 角色详细数据
+}
+
+// ESMsgPlayerSaveRole = 2 // 保存角色数据
+message ESMsgPlayerSaveRoleReq
+{
+    int64 RoleID = 1;
+    repeated DbTableData RoleTables = 2;    // 角色要保存的相关的表
+}
+
+message ESMsgPlayerSaveRoleRep
+{
+
+}
+
+// ESMsgPlayerLoginHall = 3 // 登录大厅
+message ESMsgPlayerLoginHallReq
+{
+    int64 UserID = 1;       // 账号id
+    string Account = 2;     // 账号
+	string CchId = 3;       // 渠道
+	int32 DataZone  = 4;     // 数据节点区域
+    ServerNodeInfo GateInfo = 5;   // 网关信息
+}
+
+message ESMsgPlayerLoginHallRep
+{
+    pbclient.RoleInfo RoleData = 1;
+}
+
+// ESMsgPlayerDisconnect = 4 // 玩家连接断开
+message ESMsgPlayerDisconnectReq
+{
+    int64 RoleID = 1;
+    int32 Reason = 2;   // 断开原因
+}
+// ESMsgPlayerDisconnect = 4 // 玩家连接断开
+message ESMsgPlayerDisconnectRep
+{
+}
+
+// ESMsgPlayerKickOut    = 5 // 踢掉玩家
+message ESMsgPlayerKickOutReq
+{
+    int64 RoleID = 1;
+    int32 Reason = 2;
+}
+message ESMsgPlayerKickOutRep
+{
+    
+}

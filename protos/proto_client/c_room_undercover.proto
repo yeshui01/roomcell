@@ -1,0 +1,76 @@
+syntax = "proto3";
+package pbclient;
+option go_package = "roomcell/pkg/pb/pbclient";
+
+// 谁是卧底
+enum EUndercoverStep
+{
+    EUndercoverStepReady    = 0;         // 准备阶段
+    EUndercoverStepGenWords = 1;      // 分配词汇
+    EUndercoverStepTalk     = 2;      // 发言阶段
+    EUndercoverStepVote     = 3;      // 投票阶段
+    EUndercoverStepVoteSummary = 4; // 投票结束汇总阶段
+    EUndercoverStepEnd      = 5;      // 游戏结束阶段
+}
+
+// 玩家游戏数据
+message UndercoverPlayerGameData
+{
+    int64 RoleID = 1;
+    bool IsOut = 2;         // 是否出局
+    string SelfWords = 3;   // 自己的词汇
+    bool IsTalked = 4;      // 本次是否已经发言了
+    int32 PlayerNumber = 5; // 玩家编号
+    int32 Ready = 6;        // 准备状态 0-未准备 1-准备了
+    int32 VoteNum = 7;      // 本次得票数
+}
+
+// 房间游戏数据
+message RoomUndercoverDetail {
+    int32 RoomStep = 1;     // 房间游戏阶段 对应 EUndercoverStep
+    int64 StepTime = 2;     // 阶段对应的开始时间戳
+    map<int64,UndercoverPlayerGameData> PlayersGameData = 3; // 玩家游戏数据
+    int64 TalkRoleID = 4;   // 当前发言玩家
+    int32 TalkRoleNumber = 5; // 当前发言玩家编号
+}
+
+// ECMsgGamePushUndercoverRoomData     = 30 // 谁是卧底-推送房间游戏数据
+message ECMsgGamePushUndercoverRoomDataNotify
+{
+    RoomUndercoverDetail RoomGameData = 1;
+}
+
+// ECMsgGamePushPlayerUnderWords       = 31 // 谁是卧底-推送玩家卧底词汇更新
+message ECMsgGamePushPlayerUnderWordsNotify
+{
+    map<int64, string> PlayerWords = 1;
+}
+
+// ECMsgGameUndercoverVote             = 32 // 谁是卧底-投票
+message ECMsgGameUndercoverVoteReq
+{
+    int64 TargetRoleID = 1; // 要投票的玩家
+}
+
+message ECMsgGameUndercoverVoteRsp
+{   
+}
+
+// ECMsgGamePushUndercoverTalkerChange = 33 // 谁是卧底-发言人变更
+message ECMsgGamePushUndercoverTalkerChangeNotify
+{
+    int64 TalkRoleID = 1;
+}
+
+// ECMsgGamePushUndercoverVote         = 34 // 谁是卧底-推送投票
+message ECMsgGamePushUndercoverVoteNotify
+{
+    int64 RoleID = 1;           // 投票发起人
+    int64 TargetRoleID = 2;     // 被投票的人
+}
+
+// ECMsgGamePushUndercoverOut          = 35 // 谁是卧底-推送玩家出局
+message ECMsgGamePushUndercoverOutNotify
+{
+    int64 RoleID = 1;           // 出局的人
+}

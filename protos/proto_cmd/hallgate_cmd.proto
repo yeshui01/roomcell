@@ -1,0 +1,10 @@
+syntax = "proto3";
+package pbcmd;
+option go_package = "./pbcmd";
+
+// CmdClass:CellCmdClassWebsocket = 1001
+
+// CmdTypeWebsocketConnect = 1
+message CmdTypeWebsocketConnectData {
+    
+}

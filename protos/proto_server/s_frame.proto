@@ -1,0 +1,48 @@
+syntax = "proto3";
+package pbframe;
+option go_package = "./pbframe";
+
+// EFrameMsgRegisterServerInfo int32 = 1 // 注册服务信息
+message FrameMsgRegisterServerInfoReq
+{
+    int32 ZoneID = 1;
+    int32 NodeType = 2;
+    int32 NodeIndex = 3;
+    string NodeDes = 4;
+}
+message FrameMsgRegisterServerInfoRep
+{
+    
+}
+
+// EFrameMsgServerMsgConvert   int32 = 3 // 服务器消息转换
+message EFrameMsgServerMsgConvertReq
+{
+    int32 MsgClass = 1;
+    int32 MsgType = 2;
+    bytes MsgData = 3;
+}
+message EFrameMsgServerMsgConvertRep
+{
+    int32 MsgClass = 1;
+    int32 MsgType = 2;
+    bytes MsgData = 3;
+}
+
+// EFrameMsgPushMsgToClient    int32 = 4 // 推送消息给玩家
+message EFrameMsgPushMsgToClientReq
+{
+    int64 RoleID = 1;
+    int32 MsgType = 2;
+    int32 MsgClass = 3;
+    bytes MsgData = 4;
+}
+
+// EFrameMsgBroadcastMsgToClient int32 = 5 // 广播消息给玩家
+message EFrameMsgBroadcastMsgToClientReq
+{
+    repeated int64 RoleList = 1;
+    int32 MsgType = 2;
+    int32 MsgClass = 3;
+    bytes MsgData = 4;
+}

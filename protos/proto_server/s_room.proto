@@ -1,0 +1,74 @@
+
+syntax = "proto3";
+package pbserver;
+import "s_common.proto";
+import "proto_client/c_room.proto";
+option go_package = "./pbserver";
+//ESMsgRoomCreate = 1 // 创建房间
+message ESMsgRoomCreateReq
+{
+    int64 RoomID = 1;
+    int64 RoleID = 2;
+    string RoleName = 3;
+    string GameName = 4;
+    int32 RoomType = 5;
+    NetNode GateNode = 6;
+    NetNode HallNode = 7;
+    RoomPlayerData PlayerData = 8;
+}
+
+message ESMsgRoomCreateRep
+{
+    int32 ZoneID = 1;
+    int32 NodeType = 2;
+    int32 NodeIndex = 3;
+    pbclient.RoomData RoomDetail = 4;
+}
+
+// ESMsgRoomAutoDelete = 2 // 房间删除
+message ESMsgRoomAutoDeleteReq
+{
+    int64 RoomID = 1;
+}
+message ESMsgRoomAutoDeleteRep
+{
+}
+
+// ESMsgRoomEnter      = 3 // 进入房间
+message ESMsgRoomEnterReq
+{
+    int64 RoomID = 1;
+    int64 RoleID = 2;
+    string RoleName = 3;
+    string GameName = 4;
+    NetNode GateNode = 5;
+    NetNode HallNode = 6;
+    RoomPlayerData PlayerData = 7;
+}
+
+message ESMsgRoomEnterRep
+{
+    int32 ZoneID = 1;
+    int32 NodeType = 2;
+    int32 NodeIndex = 3;
+    pbclient.RoomData RoomDetail = 4;
+}
+
+// ESMsgRoomLeave      = 4 // 离开房间
+message ESMsgRoomLeaveReq
+{
+    int64 RoleID = 1;
+}
+message ESMsgRoomLeaveRep
+{
+}
+
+// ESMsgRoomFind       = 5 // 获取房间信息
+message ESMsgRoomFindReq
+{
+    int64 RoomID = 1;
+}
+message ESMsgRoomFindRep
+{
+    pbclient.RoomSimple RoomBrief = 1;
+}

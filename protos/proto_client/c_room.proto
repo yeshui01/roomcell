@@ -1,0 +1,116 @@
+syntax = "proto3";
+package pbclient;
+import "c_room_draw_guess.proto";
+import "c_room_undercover.proto";
+option go_package = "roomcell/pkg/pb/pbclient";
+
+// 房间摘要
+message RoomSimple
+{
+    int64 RoomID = 1;   // 房间ID
+    int32 ZoneID = 2;   
+    int32 NodeIndex = 3;
+}
+
+// 房间玩家
+message RoomPlayer
+{
+    int64 RoleID = 1;
+    string Nickname = 2;
+    int32 Icon = 3;
+}
+
+// 房间信息
+message RoomData
+{
+    int64 RoomID = 1;
+    int32 GameType = 2; // 游戏房间类型
+    repeated RoomPlayer Players = 3;
+    RoomDrawDetail DrawRoomData = 4;    // 你画我猜房间游戏数据
+    int64 MasterID = 5;                 // 房主ID
+    RoomUndercoverDetail UndercoverRoomData = 6;    // 谁是卧底-房间游戏数据
+}
+
+// ECMsgRoomCreate = 1 // 创建房间
+message ECMsgRoomCreateReq
+{
+    int32 GameType = 1; // 游戏类型
+}
+
+message ECMsgRoomCreateRsp
+{
+    RoomData RoomDetail = 1;   // 房间信息
+}
+
+// ECMsgRoomQuery  = 2 // 房间查询
+message ECMsgRoomQueryReq
+{
+    int64 RoomID = 1;
+}
+
+message ECMsgRoomQueryRsp
+{
+    repeated RoomSimple RoomInfoList = 1;
+}
+
+// ECMsgRoomEnter  = 3 // 进入房间
+message ECMsgRoomEnterReq
+{
+    int64 RoomID = 1;
+}
+
+message ECMsgRoomEnterRsp
+{
+    RoomData RoomDetail = 1;   // 房间信息
+}
+
+// ECMsgRoomPushPlayerEnter = 4 // 推送有玩家进入房间
+message ECMsgRoomPushPlayerEnterNotify
+{
+    int64 RoleID = 1;
+    RoomPlayer PlayerInfo = 2;
+}
+
+// ECMsgRoomLeave           = 5 // 离开房间
+message ECMsgRoomLeaveReq
+{
+
+}
+
+message ECMsgRoomLeaveRsp
+{
+    
+}
+
+// ECMsgRoomPushPlayerLeave   = 6 // 推送有玩家离开房间
+message ECMsgRoomPushPlayerLeaveNotify
+{
+    int64 RoleID = 1;
+}
+// ECMsgRoomPushPlayerOffline = 7 // 推送有玩家离线
+message ECMsgRoomPushPlayerOfflineNotify
+{
+    int64 RoleID = 2;
+}
+
+// ECMsgRoomChat              = 8 // 房间聊天
+message ECMsgRoomChatReq
+{
+    string TalkContent = 1; // 聊天内容
+}
+message ECMsgRoomChatRsp
+{
+}
+// 房间聊天人
+message RoomTalker
+{
+    int64 RoleID = 1;
+    string Nickname = 2;
+    int32 Icon = 3;
+}
+// //ECMsgRoomPushChat          = 9 // 房间聊天-推送
+message ECMsgRoomPushChatNotify
+{
+    RoomTalker Talker = 1;  // 说话的人
+    string TalkContent = 2; // 聊天内容
+}

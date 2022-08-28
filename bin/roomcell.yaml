@@ -1,0 +1,22 @@
+accountCfgs:
+  - listenAddr: "localhost:15000"
+    logLevel: 5
+
+accountLocalDB:
+  #dbFile: "E:\\tyh_work_card\\server_project\\roomcell\\bin\\dbdata\\cellroom.db"
+  dbFile: "./dbdata/cellroom.db"
+
+serverID: 1
+zoneNodeCfgs:
+  zoneID: 1
+  gateCfgs:
+      - listenAddr: ":16000"
+        logLevel: 5
+      - listenAddr: ":16001"
+        logLevel: 5
+  roomCfgs:
+      - listenAddr: ":16011"
+        logLevel: 5
+      - listenAddr: ":16012"
+        logLevel: 5
+  

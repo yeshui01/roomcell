@@ -1,0 +1,44 @@
+// 注册
+接口: http://localhost:15000/account/register
+请求:
+{
+    "user_name": "测试账号7",
+    "pswd": "12345",            
+    "sign": "预留,目前不用",
+    "cltx": 11111
+}
+请求参数说明:
+pswd:需要6-10位字符以上
+user_name:4-64个字符
+回复:
+{
+    "code": 0,
+    "data": {
+        "user_id": 7
+    },
+    "msg": "register success"
+}
+
+// 登录
+http://localhost:15000/account/login
+请求:
+{
+    "user_name": "测试账号6",
+    "pswd": "1234567",
+    "sign": "预留,目前不用",
+    "cltx": 11111
+}
+回复:
+{
+    "code": 0,
+    "data": {
+        "hall_addr": "localhost:10020",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50Ijoi5rWL6K-V6LSm5Y-3NiIsImxhc3RfbG9naW5fdGltZSI6MCwiY2NoX2lkIjoiIiwidXNlcl9pZCI6NiwiZGF0YV96b25lIjoxLCJleHAiOjE2NTg2MzY1NDYsImlzcyI6IjEyMzQ1NiIsIm5iZiI6MTY1ODYzMTk0Nn0.rfDw5sxkWGv001YTVvkZQS4pCu9OdPXWSrj2NfQlM1c",
+        "status": 0,
+        "rest_time": 1207842
+    },
+    "msg": "login success"
+}
+回复字段说明：
+status: 0-有待认证 1-正常
+rest_time:有待认证的账号,剩余的认证超时时间,单位：秒

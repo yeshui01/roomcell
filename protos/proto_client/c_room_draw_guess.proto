@@ -1,0 +1,134 @@
+syntax = "proto3";
+package pbclient;
+option go_package = "roomcell/pkg/pb/pbclient";
+
+// 你画我猜
+// 房间游戏阶段
+enum EDrawStep
+{
+    EDrawSetpReady = 0;         // 准备阶段
+    EDrawSetpSelectDrawer = 1;  // 选择画图人
+    EDrawSetpSelectWords = 2;   // 选词
+    EDrawSetpDraw = 3;          // 画图
+    EDrawSetpDrawEnd = 4;       // 本轮结束
+    EDrawStepDrawGameEnd = 5;   // 游戏结束
+}
+
+// 画笔参数
+message BrushParam
+{
+    int32 Bold = 1; // 粗细参数
+    repeated int32 Color = 2; // 颜色
+}
+
+// 绘图点
+message PainPoint
+{
+    int32 PosX = 1;
+    int32 PosY = 2;
+}
+// 画图数据
+message DrawPainData
+{
+    BrushParam BrushSetting = 1;        // 当前画笔设定
+    repeated PainPoint DrawPoints = 2;  // 本次画的点
+}
+
+// 玩家游戏数据
+message DrawPlayerGameData
+{
+    int64 RoleID = 1;
+    int32 Score = 2;
+    int32 GuessCorrect = 3; // 猜对数量
+    int32 Ready = 4;        // 准备状态 1-准备 0-未准备
+    int32 TotalScore = 5;   // 游戏总积分
+}
+
+// 房间游戏数据
+message RoomDrawDetail {
+    int32 MaxTurnNum = 1;   // 最大游戏轮数
+    int32 DrawTime = 2;     // 每次绘图时间限制
+    int64 DrawEndTime = 3;  // 绘图结束时间
+    int32 CurTurn = 4;      // 当前第几轮,从1开始
+    int32 RoomStep = 5;     // 房间游戏阶段 对应 EDrawStep
+    int64 StepTime = 6;     // 阶段对应的开始时间戳
+    string CurWords = 7;    // 当前单词
+    repeated string WordsToSelect = 8; // 待选词组列表
+    int64 DrawerRoleID = 9; // 当前画图的玩家
+    repeated DrawPainData DrawOpts = 10; // 画图数据操作记录
+    map<int64,DrawPlayerGameData> PlayersGameData = 11; // 玩家游戏数据
+}
+
+// ECMsgGameReadyOpt              = 1 // 玩家准备操作
+message ECMsgGameReadyOptReq
+{
+    int32 Ready = 1;    // 1-准备 0-取消准备
+}
+message ECMsgGameReadyOptRsp
+{
+}
+
+// ECMsgGamePushPlayerReadyStatus = 2 // 推送玩家准备状态
+message ECMsgGamePushPlayerReadyStatusNotify
+{
+    int64 RoleID = 1;
+    int32 Ready = 2;    // 1-准备 0-取消准备
+}
+
+// ECMsgGameDrawPaint        = 10 // 你画我猜-画图
+message ECMsgGameDrawPaintReq
+{
+    DrawPainData CurPain = 1;
+}
+message ECMsgGameDrawPaintRsp
+{
+
+}
+// ECMsgGamePushDrawPaint    = 11 // 你画我猜-同步推送画图数据
+message ECMsgGamePushDrawPaintNotify
+{
+    int64 RoleID = 1;
+    DrawPainData CurPain = 2;
+}
+
+// ECMsgGameDrawGuessWords   = 12 // 你画我猜-猜词
+message ECMsgGameDrawGuessWordsReq
+{
+    string Words = 1;
+}
+message ECMsgGameDrawGuessWordsRsp
+{
+
+}
+// ECMsgGamePushDrawGuess    = 13 // 你画我猜-推送玩家的猜词
+message ECMsgGamePushDrawGuessNotify
+{
+    int64 RoleID = 1;
+    string Words = 2;
+}
+
+// ECMsgGameGrawSetting      = 14 // 你画我猜-房主设定游戏规则
+message ECMsgGameGrawSettingReq
+{
+    int32 MaxTurnNum = 1;   // 最大游戏轮数
+    int32 DrawTime = 2;     // 每次绘图时间限制
+}
+message ECMsgGameGrawSettingRsp
+{
+}
+
+// ECMsgGamePushDrawRoomData = 15 // 你画我猜-推送画图房间游戏数据更新
+message ECMsgGamePushDrawRoomDataNotify
+{
+    RoomDrawDetail RoomGameData = 1;
+}
+
+// ECMsgGameDrawSelectWords  = 16 // 选择词语
+message ECMsgGameDrawSelectWordsReq
+{
+    int32 Idx = 1;  // 词组列表的下标 从0开始
+}
+message ECMsgGameDrawSelectWordsRsp
+{
+
+}

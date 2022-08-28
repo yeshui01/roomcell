@@ -1,0 +1,45 @@
+{
+    "fileheader.customMade": {
+        "Author": "mknight(tianyh)",
+        "Mail": "824338670@qq.com",
+        "Date": "2019-09-24 20:25:33",
+        "LastEditTime": "2019-12-16 21:16:08",
+        "FilePath": "test.go"
+    },
+    "fileheader.cursorMode": {
+        "description": "test",
+        "param": "",
+        "return": ""
+    },
+    "files.associations": {
+        "*.proto": "proto3",
+        "regex": "cpp",
+        "xstring": "cpp"
+    },
+    "workbench.colorCustomizations" :{
+        "terminal.background":"#2D2D2D",
+        "terminal.foreground":"#D3D0C8",
+        "terminalCursor.background":"#D3D0C8",
+        "terminalCursor.foreground":"#D3D0C8",
+        "terminal.ansiBlack":"#2D2D2D",
+        "terminal.ansiBlue":"#6699CC",
+        "terminal.ansiBrightBlack":"#747369",
+        "terminal.ansiBrightBlue":"#6699CC",
+        "terminal.ansiBrightCyan":"#66CCCC",
+        "terminal.ansiBrightGreen":"#99CC99",
+        "terminal.ansiBrightMagenta":"#CC99CC",
+        "terminal.ansiBrightRed":"#F2777A",
+        "terminal.ansiBrightWhite":"#F2F0EC",
+        "terminal.ansiBrightYellow":"#FFCC66",
+        "terminal.ansiCyan":"#66CCCC",
+        "terminal.ansiGreen":"#99CC99",
+        "terminal.ansiMagenta":"#CC99CC",
+        "terminal.ansiRed":"#F2777A",
+        "terminal.ansiWhite":"#D3D0C8",
+        "terminal.ansiYellow":"#FFCC66",
+        // "debugConsole.warningForeground": "#HEXCODE",
+        // "debugConsole.errorForeground": "#HEXCODE",
+        // "debugConsole.sourceForeground": "#HEXCODE",
+        "debugConsole.infoForeground": "#f48771"
+    }
+}
