@@ -1,0 +1,90 @@
+syntax = "proto3";
+package pbclient;
+import "c_common.proto";
+option go_package = "roomcell/pkg/pb/pbclient";
+// 数字炸弹
+enum ENumberBombStep
+{
+    ENumberBombStepReady    = 0;      // 准备阶段
+    ENumberBombStepGenNumber = 1;     // 生成系统数字
+    ENumberBombStepGuessNumber = 2;   // 猜数字阶段
+    ENumberBombStepTurnEnd = 3;       // 本轮结束阶段
+    ENumberBombStepGameEnd = 4;       // 游戏结束
+}
+
+// 玩家游戏数据
+message NumberBombPlayerGameData
+{
+    int64 RoleID = 1;       // 角色id
+    string Nickname = 2;    // 昵称
+    int32 Icon = 3;         // 图像
+    bool IsOnline = 4;      // 是否在线
+    int32 PlayerNumber = 5; // 玩家编号
+    int32 Ready = 6;        // 准备状态 0-未准备 1-准备了
+    int32 GuessNum = 7;     // 本次游戏猜的数字
+}
+
+// 房间游戏数据
+message RoomNumberBombDetail {
+    int32 RoomStep = 1;     // 房间游戏阶段 对应 EUndercoverStep
+    int64 StepTime = 2;     // 阶段对应的开始时间戳
+    map<int64,NumberBombPlayerGameData> PlayersGameData = 3; // 玩家游戏数据
+    int64 TalkRoleID = 4;     // 当前发言玩家
+    int32 TalkRoleNumber = 5; // 当前发言玩家编号
+    int64 BombRoleID = 6;     // 猜中炸弹的玩家id
+    int32 MinNumber = 7;    // 数字范围-最小值
+    int32 MaxNumber = 8;    // 数字范围-最大值
+    int32 Turn = 9; // 当前轮数,从1开始
+    int32 MaxTurn = 10; // 最大轮数
+    int32 SysNumber = 11;   // 系统生成的数字
+}
+// ECMsgGamePushNumberBombRoomData     = 50 // 数字炸弹-推送房间游戏数据
+message ECMsgGamePushNumberBombRoomDataNotify
+{
+    RoomNumberBombDetail RoomGameData = 1;
+}
+
+// ECMsgGamePushNumberBombGuesserChange    = 51 // 数字炸弹-猜数字玩家变更
+message ECMsgGamePushNumberBombGuesserChangeNotify
+{
+    int64 TalkRoleID = 1;     // 当前发言玩家
+}
+// ECMsgGamePushNumberBombRangeChange      = 52 // 数字炸弹-数字范围变更
+message ECMsgGamePushNumberBombRangeChangeNotify
+{
+    int32 MinNumber = 1;
+    int32 MaxNumber = 2;
+}
+// ECMsgGameNumberBombGuess            = 53 // 数字炸弹-猜数字
+message ECMsgGameNumberBombGuessReq
+{
+    int32 GuessNumber = 1;  // 猜测的数字
+}
+message ECMsgGameNumberBombGuessRsp
+{
+
+}
+// ECMsgGamePushNumberBombGuess        = 54 // 数字炸弹-猜数字推送
+message ECMsgGamePushNumberBombGuessNotify
+{
+    RoomTalker Talker = 1;  // 说话的人
+    int32 GuessNumber = 2;  // 猜测的数字 
+}
+// ECMsgGameNumberBombChoosePunishment = 55 // 数字炸弹-选择惩罚
+message ECMsgGameNumberBombChoosePunishmentReq
+{
+    int32 PunishmentID = 1;// 惩罚id
+}
+message ECMsgGameNumberBombChoosePunishmentRsp
+{
+}
+// ECMsgGameNumberBombSetting          = 56 // 数字炸弹-设定
+message ECMsgGameNumberBombSettingReq
+{
+    int32 MaxTurn = 1;
+}
+message ECMsgGameNumberBombSettingRsp
+{
+}
+
+// 

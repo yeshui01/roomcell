@@ -74,10 +74,12 @@ func NewRoomUndercover(roomID int64, globalObj iroom.IRoomGlobal) *RoomUndercove
 		UndercoverRoleID: 0,
 		IsUndercoverSucc: false,
 	}
-
+	roomObj.RoomType = sconst.EGameRoomTypeUndercover
 	return roomObj
 }
-
+func (roomObj *RoomUndercover) GetRoomType() int32 {
+	return sconst.EGameRoomTypeUndercover
+}
 func (roomObj *RoomUndercover) JoinPlayer(p iroom.IGamePlayer) {
 	roomObj.EmptyRoom.JoinPlayer(p)
 	roomObj.ToPlayPlayers = append(roomObj.ToPlayPlayers, p) // 按进入房间的顺序
@@ -206,6 +208,7 @@ func (roomObj *RoomUndercover) initPlayerNumber() {
 		playerData.SelfWords = ""
 		playerData.VoteNum = 0
 		playerData.Voted = false
+		playerData.Ready = 0
 		roomObj.TalkerCacheList[i] = playerData.RoleID
 		roomObj.PlayNumber = roomObj.PlayNumber + 1
 	}
@@ -213,6 +216,8 @@ func (roomObj *RoomUndercover) initPlayerNumber() {
 	roomObj.TalkRoleID = 0
 	roomObj.TalkRoleNumber = 0
 	roomObj.IsUndercoverSucc = false
+	roomObj.UnderCoverWords = ""
+	roomObj.OtherWords = ""
 }
 
 // 生成词语
@@ -295,12 +300,14 @@ func (roomObj *RoomUndercover) ToGameDetailData() *pbclient.RoomUndercoverDetail
 			VoteNum:      v.VoteNum,
 		}
 	}
+	gameData.UnderWin = roomObj.IsUndercoverSucc
 	return gameData
 }
 func (roomObj *RoomUndercover) ToRoomDetail() *pbclient.RoomData {
 	roomData := roomObj.EmptyRoom.ToRoomDetail()
 	// 游戏数据
 	roomData.UndercoverRoomData = roomObj.ToGameDetailData()
+	// 结果
 	return roomData
 }
 

@@ -4,6 +4,7 @@ const (
 	EGameRoomTypeNone       = 0  // 空房间
 	EGameRoomTypeDrawGuess  = 1  // 你画我猜
 	EGameRoomTypeUndercover = 2  // 谁是卧底
+	EGameRoomTypeNumberBomb = 3  // 数字炸弹
 	EGameRoomTypeChat       = 10 // 聊天房间
 
 )
@@ -39,4 +40,18 @@ const (
 	EUndercoverStepVote        = 3 // 投票阶段
 	EUndercoverStepVoteSummary = 4 // 投票结束汇总阶段
 	EUndercoverStepEnd         = 5 // 游戏结束阶段
+)
+
+// 数字炸弹房间阶段
+const (
+	ENumberBombStepReady       = 0 // 准备阶段
+	ENumberBombStepGenNumber   = 1 // 生成系统数字
+	ENumberBombStepGuessNumber = 2 // 猜数字阶段
+	ENumberBombStepTurnEnd     = 3 // 本轮结束阶段
+	ENumberBombStepGameEnd     = 4 // 游戏结束
+)
+
+const (
+	NumberBombMinNumber = 1
+	NumberBombMaxNumber = 99
 )

@@ -1,11 +1,12 @@
 syntax = "proto3";
 package pbclient;
+import "c_common.proto";
 option go_package = "roomcell/pkg/pb/pbclient";
 
 // 谁是卧底
 enum EUndercoverStep
 {
-    EUndercoverStepReady    = 0;         // 准备阶段
+    EUndercoverStepReady    = 0;      // 准备阶段
     EUndercoverStepGenWords = 1;      // 分配词汇
     EUndercoverStepTalk     = 2;      // 发言阶段
     EUndercoverStepVote     = 3;      // 投票阶段
@@ -32,6 +33,7 @@ message RoomUndercoverDetail {
     map<int64,UndercoverPlayerGameData> PlayersGameData = 3; // 玩家游戏数据
     int64 TalkRoleID = 4;   // 当前发言玩家
     int32 TalkRoleNumber = 5; // 当前发言玩家编号
+    bool UnderWin = 6;        // 卧底是否胜利 false失败 true胜利
 }
 
 // ECMsgGamePushUndercoverRoomData     = 30 // 谁是卧底-推送房间游戏数据
@@ -73,4 +75,22 @@ message ECMsgGamePushUndercoverVoteNotify
 message ECMsgGamePushUndercoverOutNotify
 {
     int64 RoleID = 1;           // 出局的人
+}
+
+// ECMsgGameUndercoverTalk             = 36 // 谁是卧底-发言
+message ECMsgGameUndercoverTalkReq
+{
+    string TalkContent = 1; // 发言内容
+}
+
+message ECMsgGameUndercoverTalkRsp
+{
+
+}
+
+// ECMsgGamePushUndercoverTalk         = 37 // 谁是卧底-推送发言
+message ECMsgGamePushUndercoverTalkNotify
+{
+    RoomTalker Talker = 1;  // 说话的人
+    string TalkContent = 2; // 聊天内容
 }

@@ -41,6 +41,11 @@ func (c *CellClient) HandleRoomMessage(sMsg *evhub.NetMessage) {
 			c.HandleRoomPlayerOfflineNotify(sMsg)
 			break
 		}
+	case protocol.ECMsgRoomPushChat:
+		{
+			c.HandleRoomChatNotify(sMsg)
+			break
+		}
 	default:
 		{
 			c.refreshLogContent(fmt.Sprintf("unhandled player message(%d_%d)", sMsg.Head.MsgClass, sMsg.Head.MsgType))
@@ -134,5 +139,14 @@ func (c *CellClient) HandleRoomPlayerOfflineNotify(sMsg *evhub.NetMessage) {
 		c.refreshLogContent(fmt.Sprintf("recv ECMsgRoomPushPlayerOfflineNotify:%+v", pbRep))
 	} else {
 		c.refreshLogContent(fmt.Sprintf("decode ECMsgRoomPushPlayerOfflineNotify fail"))
+	}
+}
+
+func (c *CellClient) HandleRoomChatNotify(sMsg *evhub.NetMessage) {
+	pbRep := &pbclient.ECMsgRoomPushChatNotify{}
+	if trframe.DecodePBMessage(sMsg, pbRep) {
+		c.refreshLogContent(fmt.Sprintf("recv HandleRoomChatNotify:%+v", pbRep))
+	} else {
+		c.refreshLogContent(fmt.Sprintf("decode HandleRoomChatNotify fail"))
 	}
 }

@@ -80,10 +80,28 @@ func (s *HallRoom) RegisterMsgHandler() {
 		protocol.ECMsgGameUndercoverVote,
 		hallroomhandler.HandlePlayerUndercoverVote,
 	)
-	// // 谁是卧底-发言
-	// trframe.RegWorkMsgHandler(
-	// 	protocol.ECMsgClassGame,
-	// 	protocol.ECMsgGameUndercoverVote,
-	// 	hallroomhandler.HandlePlayerChatUndertalk,
-	// )
+	// 谁是卧底-发言
+	trframe.RegWorkMsgHandler(
+		protocol.ECMsgClassGame,
+		protocol.ECMsgGameUndercoverTalk,
+		hallroomhandler.HandlePlayerChatUndertalk,
+	)
+	// 数字炸弹-猜数字
+	trframe.RegWorkMsgHandler(
+		protocol.ECMsgClassGame,
+		protocol.ECMsgGameNumberBombGuess,
+		hallroomhandler.HandlePlayerGuessNumberTalk,
+	)
+	// 数字炸弹-设定轮数
+	trframe.RegWorkMsgHandler(
+		protocol.ECMsgClassGame,
+		protocol.ECMsgGameNumberBombSetting,
+		hallroomhandler.HandlePlayerECMsgGameNumberBombSetting,
+	)
+	// 数字炸弹-选择惩罚
+	trframe.RegWorkMsgHandler(
+		protocol.ECMsgClassGame,
+		protocol.ECMsgGameNumberBombChoosePunishment,
+		hallroomhandler.HandlePlayerECMsgGameNumberBombChoosePunishment,
+	)
 }

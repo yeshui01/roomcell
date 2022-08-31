@@ -30,4 +30,7 @@ const (
 	ECodeRoomUndercoverInvalideOption    = 1109 // 谁是卧底-无效的操作
 	ECodeRoomUndercoverVoted             = 1110 // 谁是卧底-已经投票过了
 	ECodeRoomUndercoverOutPlayerCantTalk = 1111 // 谁是卧底-已经出局的玩家不能发言
+
+	ECodeRoomNumberbombInvalideOption = 1112 // 数字炸弹-无效的操作
+	ECodeRoomNumberbombHasTalked      = 1113 // 数字炸弹-已经发言了
 )

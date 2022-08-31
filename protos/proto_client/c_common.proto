@@ -1,0 +1,11 @@
+syntax = "proto3";
+package pbclient;
+option go_package = "roomcell/pkg/pb/pbclient";
+
+// 房间聊天人
+message RoomTalker
+{
+    int64 RoleID = 1;
+    string Nickname = 2;
+    int32 Icon = 3;
+}

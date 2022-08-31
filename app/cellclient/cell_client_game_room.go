@@ -85,7 +85,7 @@ func NewGameRoomBase(c *CellClient, roomID int64, gameName string) *GameRoomBase
 	})
 	btnChat.Move(fyne.NewPos(360, 0))
 	btnChat.Resize(fyne.NewSize(40, 30))
-	content := container.NewWithoutLayout(room.chatEntry, splitLine, optList, playerLabel, room.listWidget)
+	content := container.NewWithoutLayout(room.chatEntry, splitLine, optList, playerLabel, room.listWidget, btnChat)
 	room.gameWindow.SetContent(content)
 
 	room.gameWindow.Resize(fyne.NewSize(700, 600))

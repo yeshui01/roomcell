@@ -184,45 +184,6 @@ func HandleDrawSelectWords(tmsgCtx *iframe.TMsgContext) (isok int32, retData int
 	return protocol.ECodeSuccess, rep, iframe.EHandleContent
 }
 
-// 准备
-func HandleDrawReadyOpt(tmsgCtx *iframe.TMsgContext) (isok int32, retData interface{}, rt iframe.IHandleResultType) {
-	req := &pbclient.ECMsgGameReadyOptReq{}
-	if !trframe.DecodePBMessage(tmsgCtx.NetMessage, req) {
-		return protocol.ECodePBDecodeError, nil, iframe.EHandleContent
-	}
-	trframe.LogMsgInfo(tmsgCtx.NetMessage, req)
-	rep := &pbclient.ECMsgGameReadyOptRsp{}
-	hallRoomGlobal := roomServe.GetGlobalData()
-	hallPlayer := hallRoomGlobal.FindRoomPlayer(tmsgCtx.NetMessage.SecondHead.ID)
-	if hallPlayer == nil {
-		loghlp.Errorf("not find room player:%d", tmsgCtx.NetMessage.SecondHead.ID)
-		return protocol.ECodeRoomPlayerNotFound, rep, iframe.EHandleContent
-	}
-	if hallPlayer.RoomPtr == nil {
-		loghlp.Errorf("room player(%d) roomptr is nil", tmsgCtx.NetMessage.SecondHead.ID)
-		return protocol.ECodeRoomPlayerNotInRoom, rep, iframe.EHandleContent
-	}
-	roomDrawGuess, ok := hallPlayer.RoomPtr.(*gameroom.RoomDrawGuess)
-	if !ok {
-		loghlp.Errorf("roomDrawGuess convert fail")
-		return protocol.ECodeSysError, rep, iframe.EHandleContent
-	}
-
-	if roomDrawGuess.RoomStep != sconst.EDrawGuessStepReady {
-		return protocol.ECodeRoomDrawInvalideOption, rep, iframe.EHandleContent
-	}
-
-	playData := roomDrawGuess.HoldPlayerData(hallPlayer.GetRoleID())
-	playData.Ready = req.Ready
-
-	pushReady := &pbclient.ECMsgGamePushPlayerReadyStatusNotify{
-		RoleID: hallPlayer.GetRoleID(),
-		Ready:  req.Ready,
-	}
-	roomDrawGuess.BroadCastRoomMsg(hallPlayer.GetRoleID(), protocol.ECMsgClassGame, protocol.ECMsgGamePushPlayerReadyStatus, pushReady)
-	return protocol.ECodeSuccess, rep, iframe.EHandleContent
-}
-
 // 聊天猜词
 func HandlePlayerChatGuessWords(tmsgCtx *iframe.TMsgContext) (isok int32, retData interface{}, rt iframe.IHandleResultType) {
 	req := &pbclient.ECMsgRoomChatReq{}

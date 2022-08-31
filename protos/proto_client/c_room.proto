@@ -1,7 +1,9 @@
 syntax = "proto3";
 package pbclient;
+import "c_common.proto";
 import "c_room_draw_guess.proto";
 import "c_room_undercover.proto";
+import "c_room_number_bomb.proto";
 option go_package = "roomcell/pkg/pb/pbclient";
 
 // 房间摘要
@@ -24,11 +26,12 @@ message RoomPlayer
 message RoomData
 {
     int64 RoomID = 1;
-    int32 GameType = 2; // 游戏房间类型
-    repeated RoomPlayer Players = 3;
-    RoomDrawDetail DrawRoomData = 4;    // 你画我猜房间游戏数据
-    int64 MasterID = 5;                 // 房主ID
+    int32 GameType = 2;                             // 游戏房间类型
+    repeated RoomPlayer Players = 3;                // 当前玩家列表
+    RoomDrawDetail DrawRoomData = 4;                // 你画我猜房间游戏数据
+    int64 MasterID = 5;                             // 房主ID
     RoomUndercoverDetail UndercoverRoomData = 6;    // 谁是卧底-房间游戏数据
+    RoomNumberBombDetail NumberbombRoomData = 7;    // 数字炸弹-房间游戏数据
 }
 
 // ECMsgRoomCreate = 1 // 创建房间
@@ -101,13 +104,7 @@ message ECMsgRoomChatReq
 message ECMsgRoomChatRsp
 {
 }
-// 房间聊天人
-message RoomTalker
-{
-    int64 RoleID = 1;
-    string Nickname = 2;
-    int32 Icon = 3;
-}
+
 // //ECMsgRoomPushChat          = 9 // 房间聊天-推送
 message ECMsgRoomPushChatNotify
 {

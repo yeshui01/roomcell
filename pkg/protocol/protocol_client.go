@@ -45,4 +45,14 @@ const (
 	ECMsgGamePushUndercoverTalkerChange = 33 // 谁是卧底-发言人变更
 	ECMsgGamePushUndercoverVote         = 34 // 谁是卧底-推送投票
 	ECMsgGamePushUndercoverOut          = 35 // 谁是卧底-推送玩家出局
+	ECMsgGameUndercoverTalk             = 36 // 谁是卧底-发言
+	ECMsgGamePushUndercoverTalk         = 37 // 谁是卧底-推送发言
+
+	ECMsgGamePushNumberBombRoomData      = 50 // 数字炸弹-推送房间游戏数据
+	ECMsgGamePushNumberBombGuesserChange = 51 // 数字炸弹-猜数字玩家变更
+	ECMsgGamePushNumberBombRangeChange   = 52 // 数字炸弹-数字范围变更
+	ECMsgGameNumberBombGuess             = 53 // 数字炸弹-猜数字
+	ECMsgGamePushNumberBombGuess         = 54 // 数字炸弹-猜数字推送
+	ECMsgGameNumberBombChoosePunishment  = 55 // 数字炸弹-选择惩罚
+	ECMsgGameNumberBombSetting           = 56 // 数字炸弹-设定
 )

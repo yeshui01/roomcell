@@ -13,14 +13,20 @@ import (
 
 // 卧底发言
 func HandlePlayerChatUndertalk(tmsgCtx *iframe.TMsgContext) (isok int32, retData interface{}, rt iframe.IHandleResultType) {
-	req := &pbclient.ECMsgRoomChatReq{}
+	req := &pbclient.ECMsgGameUndercoverTalkReq{}
 	if !trframe.DecodePBMessage(tmsgCtx.NetMessage, req) {
 		return protocol.ECodePBDecodeError, nil, iframe.EHandleContent
 	}
-	loghlp.Infof("HandlePlayerChatGuessWords")
+	loghlp.Infof("HandlePlayerChatUndertalk")
 	trframe.LogMsgInfo(tmsgCtx.NetMessage, req)
-	rep := &pbclient.ECMsgRoomChatRsp{}
+
+	rep := &pbclient.ECMsgGameUndercoverTalkRsp{}
 	hallRoomGlobal := roomServe.GetGlobalData()
+	// 屏蔽字处理
+	wordsUtil := hallRoomGlobal.GetSensitiveWordsUtil()
+	if wordsUtil != nil {
+		req.TalkContent = wordsUtil.HandleWord(req.TalkContent, 'x')
+	}
 	roomPlayer := hallRoomGlobal.FindRoomPlayer(tmsgCtx.NetMessage.SecondHead.ID)
 	if roomPlayer == nil {
 		loghlp.Errorf("not find room player:%d", tmsgCtx.NetMessage.SecondHead.ID)
@@ -47,8 +53,8 @@ func HandlePlayerChatUndertalk(tmsgCtx *iframe.TMsgContext) (isok int32, retData
 		loghlp.Errorf("playerPlayData.IsOut ECodeRoomUndercoverOutPlayerCantTalk")
 		return protocol.ECodeRoomUndercoverOutPlayerCantTalk, rep, iframe.EHandleContent
 	}
-	// 推送聊天
-	pushMsg := &pbclient.ECMsgRoomPushChatNotify{
+	// 推送发言
+	pushMsg := &pbclient.ECMsgGamePushUndercoverTalkNotify{
 		TalkContent: req.TalkContent,
 		Talker: &pbclient.RoomTalker{
 			RoleID:   roomPlayer.GetRoleID(),
@@ -67,13 +73,13 @@ func HandlePlayerChatUndertalk(tmsgCtx *iframe.TMsgContext) (isok int32, retData
 			req.TalkContent = strings.ReplaceAll(req.TalkContent, playerPlayData.SelfWords, hideStr)
 			if roomPlayer.RoomPtr != nil {
 				pushMsg.TalkContent = req.TalkContent
-				roomPlayer.RoomPtr.BroadCastRoomMsg(0, protocol.ECMsgClassRoom, protocol.ECMsgRoomPushChat, pushMsg)
+				roomPlayer.RoomPtr.BroadCastRoomMsg(0, protocol.ECMsgClassRoom, protocol.ECMsgGamePushUndercoverTalk, pushMsg)
 			}
 		} else {
 			loghlp.Infof("player(%d) undercover talk normal,selfWords(%s), talkContent:%s", roomPlayer.GetRoleID(), playerPlayData.SelfWords, req.TalkContent)
 			if roomPlayer.RoomPtr != nil {
 				pushMsg.TalkContent = req.TalkContent
-				roomPlayer.RoomPtr.BroadCastRoomMsg(0, protocol.ECMsgClassRoom, protocol.ECMsgRoomPushChat, pushMsg)
+				roomPlayer.RoomPtr.BroadCastRoomMsg(0, protocol.ECMsgClassRoom, protocol.ECMsgGamePushUndercoverTalk, pushMsg)
 			}
 		}
 		roomObj.OnPlayerEndUnderTalk(roomPlayer.GetRoleID())
