@@ -68,7 +68,8 @@ message ECMsgGameNumberBombGuessRsp
 message ECMsgGamePushNumberBombGuessNotify
 {
     RoomTalker Talker = 1;  // 说话的人
-    int32 GuessNumber = 2;  // 猜测的数字 
+    int32 GuessNumber = 2;  // 猜测的数字
+    int32 PlayerNumber = 3; // 玩家编号
 }
 // ECMsgGameNumberBombChoosePunishment = 55 // 数字炸弹-选择惩罚
 message ECMsgGameNumberBombChoosePunishmentReq

@@ -93,4 +93,5 @@ message ECMsgGamePushUndercoverTalkNotify
 {
     RoomTalker Talker = 1;  // 说话的人
     string TalkContent = 2; // 聊天内容
+    int32 PlayerNumber = 3; // 玩家编号
 }

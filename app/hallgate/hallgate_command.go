@@ -237,9 +237,15 @@ func (hg *HallGate) IsForwardToRoom(msgClass int32, msgType int32) bool {
 		return true
 	case protocol.ECMsgClassGame*MsgFactor + protocol.ECMsgGameDrawSelectWords:
 		return true
+	case protocol.ECMsgClassGame*MsgFactor + protocol.ECMsgGameUndercoverTalk:
+		return true
 	case protocol.ECMsgClassRoom*MsgFactor + protocol.ECMsgRoomChat:
 		return true
-	case protocol.ECMsgClassRoom*MsgFactor + protocol.ECMsgGameUndercoverVote:
+	case protocol.ECMsgClassGame*MsgFactor + protocol.ECMsgGameUndercoverVote:
+		return true
+	case protocol.ECMsgClassGame*MsgFactor + protocol.ECMsgGameNumberBombGuess:
+		return true
+	case protocol.ECMsgClassGame*MsgFactor + protocol.ECMsgGameNumberBombChoosePunishment:
 		return true
 	}
 	return false

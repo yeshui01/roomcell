@@ -30,7 +30,7 @@ func (s *HallRoomGlobal) CreateRoom(roomID int64, roomType int32, roleID int64) 
 	case sconst.EGameRoomTypeUndercover:
 		{
 			newRoom = gameroom.NewRoomUndercover(roomID, s)
-			loghlp.Infof("create EGameRoomTypeChat success,roomid:%d", roomID)
+			loghlp.Infof("create EGameRoomTypeUndercover success,roomid:%d", roomID)
 			break
 		}
 	case sconst.EGameRoomTypeNumberBomb:

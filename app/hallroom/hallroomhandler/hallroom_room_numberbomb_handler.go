@@ -16,7 +16,7 @@ func HandlePlayerGuessNumberTalk(tmsgCtx *iframe.TMsgContext) (isok int32, retDa
 	if !trframe.DecodePBMessage(tmsgCtx.NetMessage, req) {
 		return protocol.ECodePBDecodeError, nil, iframe.EHandleContent
 	}
-	loghlp.Infof("HandlePlayerChatUndertalk")
+	loghlp.Infof("HandlePlayerGuessNumberTalk")
 	trframe.LogMsgInfo(tmsgCtx.NetMessage, req)
 
 	rep := &pbclient.ECMsgGameNumberBombGuessRsp{}
@@ -62,6 +62,7 @@ func HandlePlayerGuessNumberTalk(tmsgCtx *iframe.TMsgContext) (isok int32, retDa
 			Nickname: roomPlayer.Nickname,
 			Icon:     roomPlayer.Icon,
 		},
+		PlayerNumber: playerPlayData.PlayNumber,
 	}
 	roomObj.BroadCastRoomMsg(0,
 		protocol.ECMsgClassGame,

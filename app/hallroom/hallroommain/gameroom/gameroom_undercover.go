@@ -141,7 +141,18 @@ func (roomObj *RoomUndercover) Update(curTime int64) {
 		{
 			if len(roomObj.UnderCoverWords) < 1 {
 				roomObj.genWords()
-				// TODO 推送玩家词汇
+				// 推送玩家词汇
+				pushWords := &pbclient.ECMsgGamePushPlayerUnderWordsNotify{
+					PlayerWords: make(map[int64]string),
+				}
+				for k, v := range roomObj.PlayerGameData {
+					pushWords.PlayerWords[k] = v.SelfWords
+				}
+				roomObj.BroadCastRoomMsg(0,
+					protocol.ECMsgClassGame,
+					protocol.ECMsgGamePushPlayerUnderWords,
+					pushWords)
+				loghlp.Infof("broad cast words upd:%+v", pushWords)
 			}
 			// 3秒后变为发言
 			if curTime-roomObj.StepTime >= 3 {
@@ -153,6 +164,18 @@ func (roomObj *RoomUndercover) Update(curTime int64) {
 					}
 				}
 				roomObj.ChangeStep(sconst.EUndercoverStepTalk)
+				{
+					// 广播消息
+					pushMsg := &pbclient.ECMsgGamePushUndercoverTalkerChangeNotify{
+						TalkRoleID: roomObj.TalkRoleID,
+					}
+					roomObj.BroadCastRoomMsg(0,
+						protocol.ECMsgClassGame,
+						protocol.ECMsgGamePushUndercoverTalkerChange,
+						pushMsg)
+					loghlp.Infof("init changeUnderTalker succ, room(%d) new underTalker(%d), push:%+v", roomObj.RoomID, roomObj.UndercoverRoleID, pushMsg)
+					roomObj.ChangeStep(sconst.EUndercoverStepTalk)
+				}
 			}
 			break
 		}
@@ -430,7 +453,7 @@ func (roomObj *RoomUndercover) VoteSummary() bool {
 				undercoverPlayerOut = true
 			}
 
-			loghlp.Debugf("push undercover player(%d) out for voted num >= 50%,push:%+v", playerData.RoleID, pushMsg)
+			loghlp.Debugf("push undercover player(%d) out for voted num >= 50percent,push:%+v", playerData.RoleID, pushMsg)
 		}
 	}
 	if undercoverPlayerOut {

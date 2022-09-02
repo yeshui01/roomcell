@@ -61,6 +61,7 @@ func HandlePlayerChatUndertalk(tmsgCtx *iframe.TMsgContext) (isok int32, retData
 			Nickname: roomPlayer.Nickname,
 			Icon:     roomPlayer.Icon,
 		},
+		PlayerNumber: playerPlayData.PlayNumber,
 	}
 	if len(playerPlayData.CurTalk) == 0 {
 		playerPlayData.CurTalk = req.TalkContent
@@ -73,13 +74,13 @@ func HandlePlayerChatUndertalk(tmsgCtx *iframe.TMsgContext) (isok int32, retData
 			req.TalkContent = strings.ReplaceAll(req.TalkContent, playerPlayData.SelfWords, hideStr)
 			if roomPlayer.RoomPtr != nil {
 				pushMsg.TalkContent = req.TalkContent
-				roomPlayer.RoomPtr.BroadCastRoomMsg(0, protocol.ECMsgClassRoom, protocol.ECMsgGamePushUndercoverTalk, pushMsg)
+				roomPlayer.RoomPtr.BroadCastRoomMsg(0, protocol.ECMsgClassGame, protocol.ECMsgGamePushUndercoverTalk, pushMsg)
 			}
 		} else {
 			loghlp.Infof("player(%d) undercover talk normal,selfWords(%s), talkContent:%s", roomPlayer.GetRoleID(), playerPlayData.SelfWords, req.TalkContent)
 			if roomPlayer.RoomPtr != nil {
 				pushMsg.TalkContent = req.TalkContent
-				roomPlayer.RoomPtr.BroadCastRoomMsg(0, protocol.ECMsgClassRoom, protocol.ECMsgGamePushUndercoverTalk, pushMsg)
+				roomPlayer.RoomPtr.BroadCastRoomMsg(0, protocol.ECMsgClassGame, protocol.ECMsgGamePushUndercoverTalk, pushMsg)
 			}
 		}
 		roomObj.OnPlayerEndUnderTalk(roomPlayer.GetRoleID())
@@ -126,7 +127,7 @@ func HandlePlayerUndercoverVote(tmsgCtx *iframe.TMsgContext) (isok int32, retDat
 			RoleID:       roomPlayer.GetRoleID(),
 			TargetRoleID: req.TargetRoleID,
 		}
-		roomPlayer.RoomPtr.BroadCastRoomMsg(roomPlayer.GetRoleID(), protocol.ECMsgClassRoom, protocol.ECMsgGamePushUndercoverVote, pushMsg)
+		roomPlayer.RoomPtr.BroadCastRoomMsg(roomPlayer.GetRoleID(), protocol.ECMsgClassGame, protocol.ECMsgGamePushUndercoverVote, pushMsg)
 		roomObj.OnPlayerVote(roomPlayer.GetRoleID(), req.TargetRoleID)
 	}
 

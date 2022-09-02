@@ -22,3 +22,13 @@ type OrmHallList struct {
 func (tb *OrmHallList) TableName() string {
 	return "hall_list"
 }
+
+type OrmCellNotice struct {
+	ID      int32  `gorm:"column:id;primaryKey"`
+	Content string `gorm:"column:content"`
+	UpdTime int64  `gorm:"column:upd_time"`
+}
+
+func (tb *OrmCellNotice) TableName() string {
+	return "cell_notice"
+}

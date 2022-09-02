@@ -144,7 +144,7 @@ func (roomObj *RoomNumberBomb) ChangeStep(step int32) {
 	roomObj.PushRoomGameData()
 }
 func (roomObj *RoomNumberBomb) IsAllReady() bool {
-	if len(roomObj.PlayerList) < 4 {
+	if len(roomObj.PlayerList) < 2 {
 		return false // 至少需要4个人
 	}
 	rReady := true
@@ -179,6 +179,13 @@ func (roomObj *RoomNumberBomb) Update(curTime int64) {
 				roomObj.genSysNumber()
 				roomObj.nextTalker(false)
 				roomObj.ChangeStep(sconst.ENumberBombStepGuessNumber)
+				pushMsg := &pbclient.ECMsgGamePushNumberBombGuesserChangeNotify{
+					TalkRoleID: roomObj.TalkRoleID,
+				}
+				roomObj.BroadCastRoomMsg(0,
+					protocol.ECMsgClassGame,
+					protocol.ECMsgGamePushNumberBombGuesserChange,
+					pushMsg)
 			}
 			break
 		}
@@ -234,6 +241,7 @@ func (roomObj *RoomNumberBomb) initPlayerNumber() {
 		playerData, ok := roomObj.PlayerGameData[p.GetRoleID()]
 		if ok {
 			playerData.PlayNumber = roomObj.genNumberId()
+			playerData.IsTalked = false
 			roomObj.TalkerCacheList = append(roomObj.TalkerCacheList, playerData)
 		}
 	}
@@ -273,6 +281,7 @@ func (roomObj *RoomNumberBomb) PlayerGuess(roleID int64, guessNumber int32) bool
 		roomObj.PushRangeChange()
 	}
 	playerData.IsTalked = true
+	playerData.GuessNum = guessNumber
 	if !roomObj.nextTalker(true) {
 		// 找不到下一位发言人,继续重新开始发言
 		for _, p := range roomObj.PlayerGameData {
@@ -314,18 +323,23 @@ func (roomObj *RoomNumberBomb) nextTalker(notify bool) bool {
 			p.GuessNum = 0
 			continue
 		}
-		p.IsTalked = true
-		findNewTalker = true
-		pushMsg := &pbclient.ECMsgGamePushNumberBombGuesserChangeNotify{
-			TalkRoleID: p.RoleID,
+		if p.IsTalked {
+			continue
 		}
+		p.IsTalked = false
+		findNewTalker = true
+
 		roomObj.TalkRoleNumber = p.PlayNumber
 		roomObj.TalkRoleID = p.RoleID
 		if notify {
+			pushMsg := &pbclient.ECMsgGamePushNumberBombGuesserChangeNotify{
+				TalkRoleID: p.RoleID,
+			}
 			roomObj.BroadCastRoomMsg(0,
 				protocol.ECMsgClassGame,
 				protocol.ECMsgGamePushNumberBombGuesserChange,
 				pushMsg)
+			loghlp.Debugf("notify change bomb guesser(%d)", p.RoleID)
 		}
 		break
 	}

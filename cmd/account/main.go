@@ -45,8 +45,13 @@ func main() {
 	loghlp.Debugf("roomCellCfg:%+v", roomCellCfg)
 	loghlp.SetConsoleLogLevel(logrus.Level(roomCellCfg.AccountCfgs[0].LogLevel))
 	accApp := account.NewAccount(roomCellCfg)
-	if roomCellCfg.AccountLocalDB != nil && len(roomCellCfg.AccountLocalDB.DbFile) > 0 {
-		accApp.OpenLocalDB(roomCellCfg.AccountLocalDB.DbFile)
+	if roomCellCfg.AccountLocalDB != nil {
+		if len(roomCellCfg.AccountLocalDB.DbFile) > 0 {
+			loghlp.Infof("open localdb:%s", roomCellCfg.AccountLocalDB.DbFile)
+			accApp.OpenLocalDB(roomCellCfg.AccountLocalDB.DbFile)
+		} else {
+			panic("local db config error")
+		}
 	} else {
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", roomCellCfg.AccountDB.User, roomCellCfg.AccountDB.Pswd, roomCellCfg.AccountDB.Host, roomCellCfg.AccountDB.Port, roomCellCfg.AccountDB.DbName)
 		loghlp.Infof("open mysql:%s", dsn)

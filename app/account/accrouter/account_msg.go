@@ -25,3 +25,13 @@ type AccountLoginRsp struct {
 	Statu    int32  `json:"status"`    // 当前账号状态 0-未验证 1-认证通过
 	RestTime int32  `json:"rest_time"` // 剩余的认证时间,为0则不可用
 }
+
+// 公告
+type QueryNoticeReq struct {
+	Sign string `json:"sign"`
+	CltX int64  `json:"cltx"`
+}
+type QueryNoticeRsp struct {
+	ID     int32
+	Notice string // 公告内容
+}

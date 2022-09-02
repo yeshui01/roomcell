@@ -25,6 +25,9 @@ func SetupAccountApi(app IAccApp) {
 	accApi := accApp.GetRouter().Group("/account")
 	accApi.POST("/register", registerAccount)
 	accApi.POST("/login", loginAccount)
+
+	noticeApi := accApp.GetRouter().Group("/notice")
+	noticeApi.POST("/query", queryNotice)
 }
 
 // 注册
@@ -193,6 +196,35 @@ func loginAccount(c *gin.Context) {
 		loghlp.Infof("parse token success:%+v", claimData)
 	} else {
 		loghlp.Errorf("parse token fail:%s", errJwt.Error())
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": 0,
+		"msg":  "login success",
+		"data": rep,
+	})
+}
+
+// 查询公告
+func queryNotice(c *gin.Context) {
+	var req QueryNoticeReq
+	if err := c.BindJSON(&req); err != nil {
+		loghlp.Errorf("req bind json fail!!!")
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	accDB := accApp.GetAccountDB()
+	var cellNotice OrmCellNotice = OrmCellNotice{}
+	errdb := accDB.Model(cellNotice).First(&cellNotice).Error
+	if errdb != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": protocol.ECodeNotFindNotice,
+			"msg":  "not find notice",
+		})
+		return
+	}
+	var rep QueryNoticeRsp = QueryNoticeRsp{
+		ID:     cellNotice.ID,
+		Notice: cellNotice.Content,
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"code": 0,

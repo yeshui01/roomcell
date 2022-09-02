@@ -17,6 +17,7 @@ const (
 	ECodeAccPasswordError        = 1003 // 账号密码错误
 	ECodeRoleNotExisted          = 1004 // 角色不存在
 	ECodeRoleHasOnline           = 1005 // 玩家已经在线
+	ECodeNotFindNotice           = 1106 // 未找到公告
 	// 房间
 	ECodeRoomCreateFail                  = 1100 // 房间创建失败
 	ECodeRoomPlayerHasInRoom             = 1101 // 玩家已经在房间
