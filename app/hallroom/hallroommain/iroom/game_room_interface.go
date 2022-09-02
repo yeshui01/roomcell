@@ -19,4 +19,5 @@ type IGameRoom interface {
 	IsCanJoin() bool
 	SetMasterID(masterID int64)
 	GetMasterID() int64
+	IsPlayerFull() bool
 }

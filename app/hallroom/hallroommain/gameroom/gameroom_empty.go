@@ -155,7 +155,9 @@ func (room *EmptyRoom) BroadCastRoomMsg(excludeRoleID int64, msgClass int32, msg
 func (room *EmptyRoom) IsCanJoin() bool {
 	return true
 }
-
+func (room *EmptyRoom) IsPlayerFull() bool {
+	return len(room.PlayerList) >= sconst.MaxRoomPlayerNum
+}
 func (room *EmptyRoom) SetMasterID(masterID int64) {
 	room.MasterID = masterID
 }

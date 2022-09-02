@@ -349,3 +349,7 @@ func (roomObj *RoomNumberBomb) nextTalker(notify bool) bool {
 	}
 	return findNewTalker
 }
+
+func (roomObj *RoomNumberBomb) IsCanJoin() bool {
+	return roomObj.RoomStep == sconst.ENumberBombStepReady
+}

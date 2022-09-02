@@ -52,14 +52,14 @@ type RoomUndercover struct {
 	StepTime         int64
 	ToPlayPlayers    []iroom.IGamePlayer
 	PlayerGameData   map[int64]*PlayerUndercoverData
-	PlayNumber       int32   // number生成器
-	TalkRoleID       int64   // 发言玩家id
-	TalkRoleNumber   int32   // 发言玩家的编号
-	UnderCoverWords  string  // 卧底词语
-	OtherWords       string  // 其他玩家词语
-	UndercoverRoleID int64   // 卧底玩家
-	TalkerCacheList  []int64 // 发言玩家缓存列表
-	IsUndercoverSucc bool    // 卧底是否胜利
+	PlayNumber       int32                   // number生成器
+	TalkRoleID       int64                   // 发言玩家id
+	TalkRoleNumber   int32                   // 发言玩家的编号
+	UnderCoverWords  string                  // 卧底词语
+	OtherWords       string                  // 其他玩家词语
+	UndercoverRoleID int64                   // 卧底玩家
+	TalkerCacheList  []*PlayerUndercoverData // 发言玩家缓存列表
+	IsUndercoverSucc bool                    // 卧底是否胜利
 }
 
 func NewRoomUndercover(roomID int64, globalObj iroom.IRoomGlobal) *RoomUndercover {
@@ -222,7 +222,7 @@ func (roomObj *RoomUndercover) ChangeStep(step int32) {
 // 分配玩家编号
 func (roomObj *RoomUndercover) initPlayerNumber() {
 	roomObj.PlayNumber = 1
-	roomObj.TalkerCacheList = make([]int64, len(roomObj.ToPlayPlayers))
+	roomObj.TalkerCacheList = make([]*PlayerUndercoverData, len(roomObj.ToPlayPlayers))
 	for i, p := range roomObj.ToPlayPlayers {
 		playerData := roomObj.HoldPlayerData(p.GetRoleID())
 		playerData.PlayNumber = roomObj.PlayNumber
@@ -232,7 +232,7 @@ func (roomObj *RoomUndercover) initPlayerNumber() {
 		playerData.VoteNum = 0
 		playerData.Voted = false
 		playerData.Ready = 0
-		roomObj.TalkerCacheList[i] = playerData.RoleID
+		roomObj.TalkerCacheList[i] = playerData
 		roomObj.PlayNumber = roomObj.PlayNumber + 1
 	}
 
@@ -259,9 +259,9 @@ func (roomObj *RoomUndercover) genWords() {
 	if len(roomObj.TalkerCacheList) < 3 {
 		return
 	}
-	randRoleID := roomObj.TalkerCacheList[rand.Intn(len(roomObj.TalkerCacheList))]
+	randRole := roomObj.TalkerCacheList[rand.Intn(len(roomObj.TalkerCacheList))]
 	for _, playerData := range roomObj.PlayerGameData {
-		if playerData.RoleID == randRoleID {
+		if playerData.RoleID == randRole.RoleID {
 			// 卧底玩家
 			playerData.SelfWords = roomObj.UnderCoverWords
 			roomObj.UndercoverRoleID = playerData.RoleID
@@ -373,7 +373,7 @@ func (roomObj *RoomUndercover) OnPlayerEndUnderTalk(roleID int64) {
 func (roomObj *RoomUndercover) changeUnderTalker() bool {
 	var ret bool = false
 	for idx := roomObj.TalkRoleNumber - 1; idx < int32(len(roomObj.TalkerCacheList)); idx++ {
-		playerData := roomObj.GetPlayerData(roomObj.TalkerCacheList[idx])
+		playerData := roomObj.TalkerCacheList[idx]
 		if playerData == nil {
 			continue
 		}
@@ -428,9 +428,6 @@ func (roomObj *RoomUndercover) OnPlayerVote(roleID int64, targetRoleID int64) {
 // 投票结束
 func (roomObj *RoomUndercover) VoteSummary() bool {
 	loghlp.Debugf("room(%d) on vote summary", roomObj.RoomID)
-	// 当有玩家被投票大于50%时，第一窗口“Zhuangtai”文字变更为“已出局”（播放相应动画），此时所有
-	// 玩家“Zhuangtai/Toupiao”关闭，出局玩家两窗口锁死，不可再操作。
-	// 如无玩家被投票达到50%，1号玩家继续发言。
 	curPlayerNum := int32(len(roomObj.TalkerCacheList))
 	outVoteNum := curPlayerNum / 2
 	var undercoverPlayerOut bool = false

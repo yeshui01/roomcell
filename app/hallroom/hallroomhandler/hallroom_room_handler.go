@@ -104,6 +104,9 @@ func HandlePlayerRoomEnter(tmsgCtx *iframe.TMsgContext) (isok int32, retData int
 	if roomObj == nil {
 		return protocol.ECodeRoomNotExisted, rep, iframe.EHandleContent
 	}
+	if roomObj.IsPlayerFull() {
+		return protocol.ECodeRoomMaxPlayerNumLimit, rep, iframe.EHandleContent
+	}
 	// 游戏中途不能进入
 	if !roomObj.IsCanJoin() {
 		return protocol.ECodeRoomCantjoin, rep, iframe.EHandleContent
