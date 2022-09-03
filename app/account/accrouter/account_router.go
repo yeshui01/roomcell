@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bluele/gcache"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -16,6 +17,7 @@ import (
 type IAccApp interface {
 	GetRouter() *gin.Engine
 	GetAccountDB() *gorm.DB
+	GetCache() gcache.Cache
 }
 
 var accApp IAccApp
@@ -131,13 +133,21 @@ func loginAccount(c *gin.Context) {
 	var userAccount OrmUser = OrmUser{
 		UserName: req.UserName,
 	}
-	errdb := accDB.Model(userAccount).Where("user_name=?", req.UserName).First(&userAccount).Error
-	if errdb != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": protocol.ECodeAccNotExisted,
-			"msg":  "db error",
-		})
-		return
+	// 先从缓存取
+	dataCache := accApp.GetCache()
+	val, errCache := dataCache.Get(req.UserName)
+	if errCache == nil {
+		userAccount = val.(OrmUser)
+		loghlp.Debugf("get username(%s) info from cache!", req.UserName)
+	} else {
+		errdb := accDB.Model(userAccount).Where("user_name=?", req.UserName).First(&userAccount).Error
+		if errdb != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"code": protocol.ECodeAccNotExisted,
+				"msg":  "db error",
+			})
+			return
+		}
 	}
 	// 密码验证
 	if req.Pswd != userAccount.Pswd {
@@ -182,8 +192,7 @@ func loginAccount(c *gin.Context) {
 		return
 	}
 	var rep AccountLoginRsp = AccountLoginRsp{
-		Token: token,
-		// HallAddr: "localhost:7200", // 测试数据
+		Token:    token,
 		HallAddr: hallInfo.GateAddr,
 		RestTime: int32((userAccount.RegisterTime + int64(sconst.AccountCertificationTime)) - nowTime),
 	}
@@ -202,6 +211,8 @@ func loginAccount(c *gin.Context) {
 		"msg":  "login success",
 		"data": rep,
 	})
+	// 缓存
+	dataCache.SetWithExpire(req.UserName, userAccount, time.Second*600)
 }
 
 // 查询公告

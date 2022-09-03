@@ -6,6 +6,7 @@ import (
 	"roomcell/pkg/webserve"
 	"time"
 
+	"github.com/bluele/gcache"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
@@ -17,6 +18,7 @@ type AccountApp struct {
 	stopWeb   chan bool
 	accountDB *gorm.DB
 	appConfig *appconfig.RoomCellConfig
+	dataCache gcache.Cache
 }
 
 func NewAccount(appCfg *appconfig.RoomCellConfig) *AccountApp {
@@ -24,6 +26,7 @@ func NewAccount(appCfg *appconfig.RoomCellConfig) *AccountApp {
 		stopWeb:   make(chan bool),
 		webServe:  webserve.NewWebServe(),
 		appConfig: appCfg,
+		dataCache: gcache.New(1024).LRU().Build(),
 	}
 	s.SetupRouters()
 	return s
@@ -74,4 +77,8 @@ func (acc *AccountApp) SetupRouters() {
 
 func (acc *AccountApp) GetAccountDB() *gorm.DB {
 	return acc.accountDB
+}
+
+func (acc *AccountApp) GetCache() gcache.Cache {
+	return acc.dataCache
 }

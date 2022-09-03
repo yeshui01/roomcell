@@ -54,4 +54,5 @@ const (
 const (
 	NumberBombMinNumber = 1
 	NumberBombMaxNumber = 99
+	MaxRoomPlayerNum    = 12
 )

@@ -22,6 +22,7 @@ type PlayerBombData struct {
 	GuessNum   int32 // 本次猜测的数字
 	PlayNumber int32 // 玩家编号
 	IsTalked   bool
+	BombCount  int32 // 猜中炸弹的次数
 }
 
 type RoomNumberBomb struct {
@@ -123,6 +124,7 @@ func (roomObj *RoomNumberBomb) ToGameDetailData() *pbclient.RoomNumberBombDetail
 			Nickname:     v.Nickname,
 			IsOnline:     v.IsOnline,
 			GuessNum:     v.GuessNum,
+			BombCount:    v.BombCount,
 		}
 	}
 	gameData.MinNumber = roomObj.MinNumber
@@ -225,6 +227,7 @@ func (roomObj *RoomNumberBomb) resetDataForGameEnd() {
 		p.GuessNum = 0
 		p.PlayNumber = 0
 		p.IsTalked = false
+		p.BombCount = 0
 	}
 	roomObj.TalkRoleNumber = 0
 	roomObj.TalkRoleID = 0
@@ -232,6 +235,17 @@ func (roomObj *RoomNumberBomb) resetDataForGameEnd() {
 	roomObj.MinNumber = sconst.NumberBombMinNumber
 	roomObj.MaxNumber = sconst.NumberBombMaxNumber // 默认值
 	roomObj.BombRoleID = 0
+
+	roomObj.PlayNumber = 0
+	roomObj.TalkerCacheList = make([]*PlayerBombData, 0)
+	for _, p := range roomObj.ToPlayPlayers {
+		playerData, ok := roomObj.PlayerGameData[p.GetRoleID()]
+		if ok {
+			playerData.PlayNumber = roomObj.genNumberId()
+			playerData.IsTalked = false
+			roomObj.TalkerCacheList = append(roomObj.TalkerCacheList, playerData)
+		}
+	}
 }
 
 func (roomObj *RoomNumberBomb) initPlayerNumber() {
@@ -271,6 +285,7 @@ func (roomObj *RoomNumberBomb) PlayerGuess(roleID int64, guessNumber int32) bool
 		//
 		loghlp.Infof("player(%d) guess number bomb sysnumber(%d)", roleID, guessNumber)
 		roomObj.BombRoleID = roleID
+		playerData.BombCount++
 		roomObj.ChangeStep(sconst.ENumberBombStepTurnEnd)
 		return true
 	} else if guessNumber > roomObj.SysNumber {

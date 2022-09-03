@@ -68,7 +68,7 @@ func NewRoomUndercover(roomID int64, globalObj iroom.IRoomGlobal) *RoomUndercove
 		RoomStep:         sconst.EUndercoverStepReady,
 		StepTime:         timeutil.NowTime(),
 		PlayerGameData:   make(map[int64]*PlayerUndercoverData),
-		PlayNumber:       1,
+		PlayNumber:       0,
 		TalkRoleID:       0,
 		TalkRoleNumber:   0,
 		UndercoverRoleID: 0,
@@ -88,8 +88,7 @@ func (roomObj *RoomUndercover) JoinPlayer(p iroom.IGamePlayer) {
 	playerData.Icon = p.GetIcon()
 	if playerData.PlayNumber == 0 {
 		// 分配玩家编号
-		playerData.PlayNumber = roomObj.PlayNumber
-		roomObj.PlayNumber = roomObj.PlayNumber + 1
+		playerData.PlayNumber = roomObj.genNumberId()
 	}
 }
 
@@ -205,6 +204,7 @@ func (roomObj *RoomUndercover) Update(curTime int64) {
 	case sconst.EUndercoverStepEnd:
 		{
 			if curTime-roomObj.StepTime >= 3 {
+				roomObj.resetDataForGameEnd()
 				roomObj.ChangeStep(sconst.EUndercoverStepReady)
 			}
 			break
@@ -221,11 +221,11 @@ func (roomObj *RoomUndercover) ChangeStep(step int32) {
 
 // 分配玩家编号
 func (roomObj *RoomUndercover) initPlayerNumber() {
-	roomObj.PlayNumber = 1
+	roomObj.PlayNumber = 0
 	roomObj.TalkerCacheList = make([]*PlayerUndercoverData, len(roomObj.ToPlayPlayers))
 	for i, p := range roomObj.ToPlayPlayers {
 		playerData := roomObj.HoldPlayerData(p.GetRoleID())
-		playerData.PlayNumber = roomObj.PlayNumber
+		playerData.PlayNumber = roomObj.genNumberId()
 		playerData.CurTalk = ""
 		playerData.IsOut = false
 		playerData.SelfWords = ""
@@ -233,7 +233,6 @@ func (roomObj *RoomUndercover) initPlayerNumber() {
 		playerData.Voted = false
 		playerData.Ready = 0
 		roomObj.TalkerCacheList[i] = playerData
-		roomObj.PlayNumber = roomObj.PlayNumber + 1
 	}
 
 	roomObj.TalkRoleID = 0
@@ -384,7 +383,7 @@ func (roomObj *RoomUndercover) changeUnderTalker() bool {
 			continue
 		}
 		// 变更
-		roomObj.TalkRoleNumber = idx + 1
+		roomObj.TalkRoleNumber = playerData.PlayNumber
 		roomObj.TalkRoleID = playerData.RoleID
 		ret = true
 		break
@@ -492,4 +491,37 @@ func (roomObj *RoomUndercover) nextTalkTurn() {
 		loghlp.Infof("change next UnderTalker finish2, enter vote step")
 		roomObj.ChangeStep(sconst.EUndercoverStepVote)
 	}
+}
+func (roomObj *RoomUndercover) genNumberId() int32 {
+	roomObj.PlayNumber++
+	return roomObj.PlayNumber
+}
+
+func (roomObj *RoomUndercover) resetDataForGameEnd() {
+	for _, p := range roomObj.PlayerGameData {
+		if _, ok := roomObj.PlayerList[p.RoleID]; !ok {
+			delete(roomObj.PlayerGameData, p.RoleID)
+			continue
+		}
+	}
+
+	roomObj.PlayNumber = 0
+	roomObj.TalkerCacheList = make([]*PlayerUndercoverData, len(roomObj.ToPlayPlayers))
+	for i, p := range roomObj.ToPlayPlayers {
+		playerData := roomObj.HoldPlayerData(p.GetRoleID())
+		playerData.PlayNumber = roomObj.genNumberId()
+		playerData.CurTalk = ""
+		playerData.IsOut = false
+		playerData.SelfWords = ""
+		playerData.VoteNum = 0
+		playerData.Voted = false
+		playerData.Ready = 0
+		roomObj.TalkerCacheList[i] = playerData
+	}
+
+	roomObj.TalkRoleID = 0
+	roomObj.TalkRoleNumber = 0
+	roomObj.IsUndercoverSucc = false
+	roomObj.UnderCoverWords = ""
+	roomObj.OtherWords = ""
 }

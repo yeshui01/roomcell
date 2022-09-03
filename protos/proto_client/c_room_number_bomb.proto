@@ -22,6 +22,7 @@ message NumberBombPlayerGameData
     int32 PlayerNumber = 5; // 玩家编号
     int32 Ready = 6;        // 准备状态 0-未准备 1-准备了
     int32 GuessNum = 7;     // 本次游戏猜的数字
+    int32 BombCount = 8;    // 游戏中猜中炸弹的次数
 }
 
 // 房间游戏数据
