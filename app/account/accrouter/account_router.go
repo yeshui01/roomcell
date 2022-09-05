@@ -53,11 +53,6 @@ func registerAccount(c *gin.Context) {
 	}
 	errdb := accDB.Model(userAccount).Where("user_name=?", req.UserName).First(&userAccount).Error
 	if errdb == nil {
-		// c.JSON(http.StatusOK, gin.H{
-		// 	"code": protocol.ECodeDBError,
-		// 	"msg":  "db error",
-		// })
-		// return
 		c.JSON(http.StatusOK, gin.H{
 			"code": protocol.ECodeAccNameHasExisted,
 			"msg":  "账号已经存在",

@@ -56,6 +56,7 @@ func NewRoomNumberBomb(roomID int64, globalObj iroom.IRoomGlobal) *RoomNumberBom
 		MinNumber:      1,
 		MaxNumber:      99,
 		PlayNumber:     0,
+		MaxTurn:        1,
 	}
 	roomObj.RoomType = sconst.EGameRoomTypeNumberBomb
 	return roomObj
@@ -97,7 +98,7 @@ func (roomObj *RoomNumberBomb) PushRoomGameData() {
 		pushMsg := &pbclient.ECMsgGamePushNumberBombRoomDataNotify{
 			RoomGameData: roomObj.ToGameDetailData(),
 		}
-		roomObj.RoomGlobal.BroadcastMsgToClient(protocol.ECMsgClassGame, protocol.ECMsgGamePushUndercoverRoomData, pushMsg, pushList)
+		roomObj.RoomGlobal.BroadcastMsgToClient(protocol.ECMsgClassGame, protocol.ECMsgGamePushNumberBombRoomData, pushMsg, pushList)
 		loghlp.Debugf("PushUndercoverRoomGameData:%+v", pushMsg)
 	}
 }
@@ -197,6 +198,7 @@ func (roomObj *RoomNumberBomb) Update(curTime int64) {
 		}
 	case sconst.ENumberBombStepTurnEnd:
 		{
+			roomObj.CurTurn++
 			if curTime-roomObj.StepTime >= 3 {
 				if roomObj.CurTurn >= roomObj.MaxTurn {
 					roomObj.ChangeStep(sconst.ENumberBombStepGameEnd)
@@ -235,6 +237,8 @@ func (roomObj *RoomNumberBomb) resetDataForGameEnd() {
 	roomObj.MinNumber = sconst.NumberBombMinNumber
 	roomObj.MaxNumber = sconst.NumberBombMaxNumber // 默认值
 	roomObj.BombRoleID = 0
+	roomObj.CurTurn = 1
+	roomObj.MaxTurn = 1
 
 	roomObj.PlayNumber = 0
 	roomObj.TalkerCacheList = make([]*PlayerBombData, 0)
@@ -263,6 +267,8 @@ func (roomObj *RoomNumberBomb) initPlayerNumber() {
 
 func (roomObj *RoomNumberBomb) genSysNumber() {
 	roomObj.SysNumber = int32(rand.Intn(int(sconst.NumberBombMaxNumber))) + 1
+	roomObj.MinNumber = sconst.NumberBombMinNumber
+	roomObj.MaxNumber = sconst.NumberBombMaxNumber
 	loghlp.Infof("numberbomb room(%d) genSysNumber:%d", roomObj.RoomID, roomObj.SysNumber)
 }
 
@@ -289,10 +295,10 @@ func (roomObj *RoomNumberBomb) PlayerGuess(roleID int64, guessNumber int32) bool
 		roomObj.ChangeStep(sconst.ENumberBombStepTurnEnd)
 		return true
 	} else if guessNumber > roomObj.SysNumber {
-		roomObj.MaxNumber = guessNumber - 1
+		roomObj.MaxNumber = guessNumber
 		roomObj.PushRangeChange()
 	} else {
-		roomObj.MinNumber = guessNumber + 1
+		roomObj.MinNumber = guessNumber
 		roomObj.PushRangeChange()
 	}
 	playerData.IsTalked = true
@@ -367,4 +373,23 @@ func (roomObj *RoomNumberBomb) nextTalker(notify bool) bool {
 
 func (roomObj *RoomNumberBomb) IsCanJoin() bool {
 	return roomObj.RoomStep == sconst.ENumberBombStepReady
+}
+
+func (roomObj *RoomNumberBomb) LeavePlayer(roleID int64) {
+	// 排队列表删除
+	for i, p := range roomObj.ToPlayPlayers {
+		if p.GetRoleID() == roleID {
+			for j := i; j+1 < len(roomObj.ToPlayPlayers); j++ {
+				roomObj.ToPlayPlayers[j] = roomObj.ToPlayPlayers[j+1]
+			}
+			roomObj.ToPlayPlayers = roomObj.ToPlayPlayers[0:(len(roomObj.ToPlayPlayers) - 1)]
+			break
+		}
+	}
+
+	// 自动视为出局
+	playerData := roomObj.HoldPlayerData(roleID)
+	playerData.IsTalked = true
+	playerData.IsOnline = false
+	roomObj.EmptyRoom.LeavePlayer(roleID)
 }

@@ -427,41 +427,55 @@ func (roomObj *RoomUndercover) OnPlayerVote(roleID int64, targetRoleID int64) {
 // 投票结束
 func (roomObj *RoomUndercover) VoteSummary() bool {
 	loghlp.Debugf("room(%d) on vote summary", roomObj.RoomID)
-	curPlayerNum := int32(len(roomObj.TalkerCacheList))
-	outVoteNum := curPlayerNum / 2
-	var undercoverPlayerOut bool = false
+	curPlayerNum := int32(0)
 	for _, playerData := range roomObj.PlayerGameData {
 		if playerData.IsOut {
 			continue
 		}
-		if playerData.VoteNum >= outVoteNum {
-			// 出局
-			pushMsg := &pbclient.ECMsgGamePushUndercoverOutNotify{
-				RoleID: playerData.RoleID,
-			}
-			playerData.IsOut = true
-			roomObj.BroadCastRoomMsg(0,
-				protocol.ECMsgClassGame,
-				protocol.ECMsgGamePushUndercoverOut,
-				pushMsg)
-
-			if playerData.RoleID == roomObj.UndercoverRoleID {
-				undercoverPlayerOut = true
-			}
-
-			loghlp.Debugf("push undercover player(%d) out for voted num >= 50percent,push:%+v", playerData.RoleID, pushMsg)
-		}
+		curPlayerNum = curPlayerNum + 1
 	}
-	if undercoverPlayerOut {
-		// 卧底出局了
-		roomObj.IsUndercoverSucc = false
-		return true
-	}
-	// 卧底没有出局
-	if len(roomObj.PlayerList) <= 3 {
+	if curPlayerNum <= 2 {
 		roomObj.IsUndercoverSucc = true
 		return true
+	} else {
+		outVoteNum := curPlayerNum * 100 / 2 // 进度扩大100倍
+		var undercoverPlayerOut bool = false
+		curOutRole := int64(0)
+		for _, playerData := range roomObj.PlayerGameData {
+			if playerData.IsOut {
+				continue
+			}
+			if playerData.VoteNum*100 >= outVoteNum {
+				// 出局
+				pushMsg := &pbclient.ECMsgGamePushUndercoverOutNotify{
+					RoleID: playerData.RoleID,
+				}
+				playerData.IsOut = true
+				roomObj.BroadCastRoomMsg(0,
+					protocol.ECMsgClassGame,
+					protocol.ECMsgGamePushUndercoverOut,
+					pushMsg)
+				curOutRole = playerData.RoleID
+				if playerData.RoleID == roomObj.UndercoverRoleID {
+					undercoverPlayerOut = true
+				}
+
+				loghlp.Debugf("push undercover player(%d) out for voted num >= 50percent,push:%+v", playerData.RoleID, pushMsg)
+				break
+			}
+		}
+		if undercoverPlayerOut {
+			// 卧底出局了
+			roomObj.IsUndercoverSucc = false
+			return true
+		}
+		// 卧底没有出局
+		if curOutRole > 0 && curPlayerNum <= 3 {
+			roomObj.IsUndercoverSucc = true
+			return true
+		}
 	}
+
 	return false
 }
 

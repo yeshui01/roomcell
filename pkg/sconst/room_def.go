@@ -1,11 +1,13 @@
 package sconst
 
 const (
-	EGameRoomTypeNone       = 0  // 空房间
-	EGameRoomTypeDrawGuess  = 1  // 你画我猜
-	EGameRoomTypeUndercover = 2  // 谁是卧底
-	EGameRoomTypeNumberBomb = 3  // 数字炸弹
-	EGameRoomTypeChat       = 10 // 聊天房间
+	EGameRoomTypeNone         = 0 // 空房间
+	EGameRoomTypeDrawGuess    = 1 // 你画我猜
+	EGameRoomTypeUndercover   = 2 // 谁是卧底
+	EGameRoomTypeNumberBomb   = 3 // 数字炸弹
+	EGameRoomTypeRescuePlayer = 4 // 拯救玩家
+	//
+	EGameRoomTypeChat = 10 // 聊天房间
 
 )
 
@@ -49,6 +51,13 @@ const (
 	ENumberBombStepGuessNumber = 2 // 猜数字阶段
 	ENumberBombStepTurnEnd     = 3 // 本轮结束阶段
 	ENumberBombStepGameEnd     = 4 // 游戏结束
+)
+
+// 拯救玩家
+const (
+	ERescueStepReady   = 0 // 准备阶段
+	ERescueStepRunning = 1 // 奔跑阶段
+	ERescueStepEnd     = 2 // 结束
 )
 
 const (

@@ -6,10 +6,11 @@ const (
 	ECodeParamError  = 2 // 参数错误
 	ECodeAsyncHandle = 3 // 异步处理,当前不处理
 	// 系统错误定义
-	ECodeDBError       = 100 // db错误
-	ECodePBDecodeError = 101 // pb反序列化错误
-	ECodeTokenError    = 102 // token解析失败
-	ECodeTokenExpire   = 103 // token过期
+	ECodeDBError           = 100 // db错误
+	ECodePBDecodeError     = 101 // pb反序列化错误
+	ECodeTokenError        = 102 // token解析失败
+	ECodeTokenExpire       = 103 // token过期
+	ECodeInvalideOperation = 104 // 无效操作
 	// 错误码定义
 	ECodeAccNameHasExisted       = 1000 // 账号已经存在
 	ECodeAccNotExisted           = 1001 // 账号不存在

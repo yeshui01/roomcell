@@ -55,4 +55,10 @@ const (
 	ECMsgGamePushNumberBombGuess         = 54 // 数字炸弹-猜数字推送
 	ECMsgGameNumberBombChoosePunishment  = 55 // 数字炸弹-选择惩罚
 	ECMsgGameNumberBombSetting           = 56 // 数字炸弹-设定
+
+	ECMsgGameRescueSetting      = 70 // 拯救玩家-设定
+	ECMsgGamePushRescueRoomData = 71 // 拯救玩家-推送房间游戏数据
+	ECMsgGamePushRescueSetting  = 72 // 拯救玩家-设定推送
+	ECMsgGameRescueRecvGift     = 73 // 拯救玩家-收到礼物
+	ECMsgGamePushRescueRecvGift = 74 // 拯救玩家-收到礼物推送
 )

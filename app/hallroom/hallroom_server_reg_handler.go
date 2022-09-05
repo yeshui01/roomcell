@@ -104,4 +104,17 @@ func (s *HallRoom) RegisterMsgHandler() {
 		protocol.ECMsgGameNumberBombChoosePunishment,
 		hallroomhandler.HandlePlayerECMsgGameNumberBombChoosePunishment,
 	)
+
+	// 拯救玩家-设定
+	trframe.RegWorkMsgHandler(
+		protocol.ECMsgClassGame,
+		protocol.ECMsgGameRescueSetting,
+		hallroomhandler.HandlePlayerECMsgGameRescueSetting,
+	)
+	// 拯救玩家-收礼物
+	trframe.RegWorkMsgHandler(
+		protocol.ECMsgClassGame,
+		protocol.ECMsgGameRescueRecvGift,
+		hallroomhandler.HandlePlayerECMsgGameRescueRecvGift,
+	)
 }

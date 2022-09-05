@@ -39,6 +39,11 @@ func (s *HallRoomGlobal) CreateRoom(roomID int64, roomType int32, roleID int64) 
 			loghlp.Infof("create EGameRoomTypeNumberBomb success,roomid:%d", roomID)
 			break
 		}
+	case sconst.EGameRoomTypeRescuePlayer:
+		{
+			newRoom = gameroom.NewRoomRescue(roomID, s)
+			break
+		}
 	default:
 		{
 			loghlp.Errorf("unhandled room type:%d,create a empty room:%d, roleID:%d", roomType, roomID, roleID)

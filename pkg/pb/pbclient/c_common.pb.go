@@ -84,6 +84,78 @@ func (x *RoomTalker) GetIcon() int32 {
 	return 0
 }
 
+// 玩家基本信息
+type PlayerHeadInfo struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	RoleID   int64  `protobuf:"varint,1,opt,name=RoleID,proto3" json:"RoleID,omitempty"`     // 角色id
+	Nickname string `protobuf:"bytes,2,opt,name=Nickname,proto3" json:"Nickname,omitempty"`  // 昵称
+	Icon     int32  `protobuf:"varint,3,opt,name=Icon,proto3" json:"Icon,omitempty"`         // 图像
+	IsOnline bool   `protobuf:"varint,4,opt,name=IsOnline,proto3" json:"IsOnline,omitempty"` // 是否在线
+}
+
+func (x *PlayerHeadInfo) Reset() {
+	*x = PlayerHeadInfo{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_c_common_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PlayerHeadInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlayerHeadInfo) ProtoMessage() {}
+
+func (x *PlayerHeadInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_c_common_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlayerHeadInfo.ProtoReflect.Descriptor instead.
+func (*PlayerHeadInfo) Descriptor() ([]byte, []int) {
+	return file_c_common_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *PlayerHeadInfo) GetRoleID() int64 {
+	if x != nil {
+		return x.RoleID
+	}
+	return 0
+}
+
+func (x *PlayerHeadInfo) GetNickname() string {
+	if x != nil {
+		return x.Nickname
+	}
+	return ""
+}
+
+func (x *PlayerHeadInfo) GetIcon() int32 {
+	if x != nil {
+		return x.Icon
+	}
+	return 0
+}
+
+func (x *PlayerHeadInfo) GetIsOnline() bool {
+	if x != nil {
+		return x.IsOnline
+	}
+	return false
+}
+
 var File_c_common_proto protoreflect.FileDescriptor
 
 var file_c_common_proto_rawDesc = []byte{
@@ -94,9 +166,16 @@ var file_c_common_proto_rawDesc = []byte{
 	0x12, 0x1a, 0x0a, 0x08, 0x4e, 0x69, 0x63, 0x6b, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01,
 	0x28, 0x09, 0x52, 0x08, 0x4e, 0x69, 0x63, 0x6b, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04,
 	0x49, 0x63, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x49, 0x63, 0x6f, 0x6e,
-	0x42, 0x1a, 0x5a, 0x18, 0x72, 0x6f, 0x6f, 0x6d, 0x63, 0x65, 0x6c, 0x6c, 0x2f, 0x70, 0x6b, 0x67,
-	0x2f, 0x70, 0x62, 0x2f, 0x70, 0x62, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x22, 0x74, 0x0a, 0x0e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x48, 0x65, 0x61, 0x64, 0x49, 0x6e,
+	0x66, 0x6f, 0x12, 0x16, 0x0a, 0x06, 0x52, 0x6f, 0x6c, 0x65, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x03, 0x52, 0x06, 0x52, 0x6f, 0x6c, 0x65, 0x49, 0x44, 0x12, 0x1a, 0x0a, 0x08, 0x4e, 0x69,
+	0x63, 0x6b, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x4e, 0x69,
+	0x63, 0x6b, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x49, 0x63, 0x6f, 0x6e, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x49, 0x63, 0x6f, 0x6e, 0x12, 0x1a, 0x0a, 0x08, 0x49, 0x73,
+	0x4f, 0x6e, 0x6c, 0x69, 0x6e, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x08, 0x52, 0x08, 0x49, 0x73,
+	0x4f, 0x6e, 0x6c, 0x69, 0x6e, 0x65, 0x42, 0x1a, 0x5a, 0x18, 0x72, 0x6f, 0x6f, 0x6d, 0x63, 0x65,
+	0x6c, 0x6c, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x62, 0x2f, 0x70, 0x62, 0x63, 0x6c, 0x69, 0x65,
+	0x6e, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -111,9 +190,10 @@ func file_c_common_proto_rawDescGZIP() []byte {
 	return file_c_common_proto_rawDescData
 }
 
-var file_c_common_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_c_common_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_c_common_proto_goTypes = []interface{}{
-	(*RoomTalker)(nil), // 0: pbclient.RoomTalker
+	(*RoomTalker)(nil),     // 0: pbclient.RoomTalker
+	(*PlayerHeadInfo)(nil), // 1: pbclient.PlayerHeadInfo
 }
 var file_c_common_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -141,6 +221,18 @@ func file_c_common_proto_init() {
 				return nil
 			}
 		}
+		file_c_common_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PlayerHeadInfo); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -148,7 +240,7 @@ func file_c_common_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_c_common_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

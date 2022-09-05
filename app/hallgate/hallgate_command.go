@@ -247,6 +247,12 @@ func (hg *HallGate) IsForwardToRoom(msgClass int32, msgType int32) bool {
 		return true
 	case protocol.ECMsgClassGame*MsgFactor + protocol.ECMsgGameNumberBombChoosePunishment:
 		return true
+	case protocol.ECMsgClassGame*MsgFactor + protocol.ECMsgGameNumberBombSetting:
+		return true
+	case protocol.ECMsgClassGame*MsgFactor + protocol.ECMsgGameRescueSetting:
+		return true
+	case protocol.ECMsgClassGame*MsgFactor + protocol.ECMsgGameRescueRecvGift:
+		return true
 	}
 	return false
 }

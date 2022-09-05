@@ -28,6 +28,7 @@ func HandleDrawReadyOpt(tmsgCtx *iframe.TMsgContext) (isok int32, retData interf
 		loghlp.Errorf("room player(%d) roomptr is nil", tmsgCtx.NetMessage.SecondHead.ID)
 		return protocol.ECodeRoomPlayerNotInRoom, rep, iframe.EHandleContent
 	}
+	// 就不用接口了,直接实例判断
 	switch hallPlayer.RoomPtr.GetRoomType() {
 	case sconst.EGameRoomTypeDrawGuess:
 		{
@@ -66,6 +67,20 @@ func HandleDrawReadyOpt(tmsgCtx *iframe.TMsgContext) (isok int32, retData interf
 			}
 			if roomObj.RoomStep != sconst.EUndercoverStepReady {
 				return protocol.ECodeRoomNumberbombInvalideOption, rep, iframe.EHandleContent
+			}
+			playData := roomObj.HoldPlayerData(hallPlayer.GetRoleID())
+			playData.Ready = req.Ready
+			break
+		}
+	case sconst.EGameRoomTypeRescuePlayer:
+		{
+			roomObj, ok := hallPlayer.RoomPtr.(*gameroom.RoomRescue)
+			if !ok {
+				loghlp.Errorf("RoomRescue convert fail")
+				return protocol.ECodeSysError, rep, iframe.EHandleContent
+			}
+			if roomObj.RoomStep != sconst.ERescueStepReady {
+				return protocol.ECodeInvalideOperation, rep, iframe.EHandleContent
 			}
 			playData := roomObj.HoldPlayerData(hallPlayer.GetRoleID())
 			playData.Ready = req.Ready
