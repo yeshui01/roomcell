@@ -20,7 +20,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 谁是卧底
+// 拯救玩家
 type ERescueStep int32
 
 const (

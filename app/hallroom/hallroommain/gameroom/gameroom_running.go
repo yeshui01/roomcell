@@ -10,59 +10,60 @@ import (
 	"sort"
 )
 
-// 拯救玩家
+// 热血奔跑
+const (
+	ERunningReachForNormal  = 0
+	ERunningReachForOffline = 1
+)
+
 // 玩家游戏数据
-type RescuePlayerData struct {
+type RunningPlayerData struct {
 	RoleID   int64  // 玩家ID
 	Nickname string // 名称
 	Icon     int32  // 图像
 	Ready    int32  // 准备状态 0-未准备 1-准备了
 	// 本次数据
-	IsOnline bool
-	Hp       int32
-	HpTime   int64 // hp时间
+	IsOnline  bool
+	ReachTime int64 // 到达终点的时间
+	ReachType int32 // 0-normal 1-offline
 }
-type RoomRescue struct {
+type RoomRunning struct {
 	*EmptyRoom
 	RoomStep       int32
 	StepTime       int64
 	ToPlayPlayers  []iroom.IGamePlayer
-	PlayerGameData map[int64]*RescuePlayerData
-	MaxHp          int32
-	MaxTime        int32
-	HpRank         []int64
+	PlayerGameData map[int64]*RunningPlayerData
+	RunningRank    []int64
 }
 
-func NewRoomRescue(roomID int64, globalObj iroom.IRoomGlobal) *RoomRescue {
-	roomObj := &RoomRescue{
+func NewRoomRunning(roomID int64, globalObj iroom.IRoomGlobal) *RoomRunning {
+	roomObj := &RoomRunning{
 		EmptyRoom:      NewEmptyRoom(roomID, globalObj),
 		RoomStep:       sconst.EUndercoverStepReady,
 		StepTime:       timeutil.NowTime(),
-		PlayerGameData: make(map[int64]*RescuePlayerData),
-		MaxHp:          10,
-		MaxTime:        120,
-		HpRank:         make([]int64, 0),
+		PlayerGameData: make(map[int64]*RunningPlayerData),
+		RunningRank:    make([]int64, 0),
 	}
-	roomObj.RoomType = sconst.EGameRoomTypeRescuePlayer
+	roomObj.RoomType = sconst.EGameRoomTypeRunning
 	return roomObj
 }
-func (roomObj *RoomRescue) HoldPlayerData(roleID int64) *RescuePlayerData {
+func (roomObj *RoomRunning) HoldPlayerData(roleID int64) *RunningPlayerData {
 	if playerData, ok := roomObj.PlayerGameData[roleID]; ok {
 		return playerData
 	}
-	playerData := &RescuePlayerData{
+	playerData := &RunningPlayerData{
 		RoleID: roleID,
 	}
 	roomObj.PlayerGameData[roleID] = playerData
 	return playerData
 }
-func (roomObj *RoomRescue) GetPlayerData(roleID int64) *RescuePlayerData {
+func (roomObj *RoomRunning) GetPlayerData(roleID int64) *RunningPlayerData {
 	if playerData, ok := roomObj.PlayerGameData[roleID]; ok {
 		return playerData
 	}
 	return nil
 }
-func (roomObj *RoomRescue) JoinPlayer(p iroom.IGamePlayer) {
+func (roomObj *RoomRunning) JoinPlayer(p iroom.IGamePlayer) {
 	roomObj.EmptyRoom.JoinPlayer(p)
 	roomObj.ToPlayPlayers = append(roomObj.ToPlayPlayers, p) // 按进入房间的顺序
 	playerData := roomObj.HoldPlayerData(p.GetRoleID())
@@ -70,55 +71,52 @@ func (roomObj *RoomRescue) JoinPlayer(p iroom.IGamePlayer) {
 	playerData.Icon = p.GetIcon()
 	playerData.IsOnline = true
 }
-
-func (roomObj *RoomRescue) PushRoomGameData() {
+func (roomObj *RoomRunning) PushRoomGameData() {
 	pushList := make([]int64, 0)
 	for k := range roomObj.PlayerList {
 		pushList = append(pushList, k)
 	}
 	if len(pushList) > 0 {
-		pushMsg := &pbclient.ECMsgGamePushRescueRoomDataNotify{
+		pushMsg := &pbclient.ECMsgGamePushRunningRoomDataNotify{
 			RoomGameData: roomObj.ToGameDetailData(),
 		}
-		roomObj.RoomGlobal.BroadcastMsgToClient(protocol.ECMsgClassGame, protocol.ECMsgGamePushRescueRoomData, pushMsg, pushList)
-		loghlp.Debugf("PushRescueRoomGameData:%+v", pushMsg)
+		roomObj.RoomGlobal.BroadcastMsgToClient(protocol.ECMsgClassGame, protocol.ECMsgGamePushRunningRoomData, pushMsg, pushList)
+		loghlp.Debugf("PushRunningRoomGameData:%+v", pushMsg)
 	}
 }
-func (roomObj *RoomRescue) ToGameDetailData() *pbclient.RoomRescueDetail {
-	gameData := &pbclient.RoomRescueDetail{
+func (roomObj *RoomRunning) ToGameDetailData() *pbclient.RoomRunningDetail {
+	gameData := &pbclient.RoomRunningDetail{
 		RoomStep: roomObj.RoomStep,
 		StepTime: roomObj.StepTime,
-		MaxTime:  roomObj.MaxTime,
 	}
 	// 玩家数据
-	gameData.PlayersGameData = make(map[int64]*pbclient.RescuePlayerGameData)
+	gameData.PlayersGameData = make(map[int64]*pbclient.RunningPlayerGameData)
 	for k, v := range roomObj.PlayerGameData {
-		gameData.PlayersGameData[k] = &pbclient.RescuePlayerGameData{
+		gameData.PlayersGameData[k] = &pbclient.RunningPlayerGameData{
 			RoleID:   k,
 			Ready:    v.Ready,
 			Icon:     v.Icon,
 			Nickname: v.Nickname,
 			IsOnline: v.IsOnline,
-			Hp:       v.Hp,
 		}
 	}
-	gameData.MaxHp = roomObj.MaxHp
-	gameData.MaxTime = roomObj.MaxTime
-	if gameData.RoomStep == sconst.ERescueStepEnd {
+
+	if gameData.RoomStep == sconst.ERunningStepEnd {
 		// 排名数据
-		gameData.RankList = make([]int64, len(roomObj.HpRank))
-		copy(gameData.RankList, roomObj.HpRank)
+		gameData.RankList = make([]int64, len(roomObj.RunningRank))
+		copy(gameData.RankList, roomObj.RunningRank)
 	}
 	return gameData
 }
-func (roomObj *RoomRescue) ChangeStep(step int32) {
+
+func (roomObj *RoomRunning) ChangeStep(step int32) {
 	roomObj.RoomStep = step
 	roomObj.StepTime = timeutil.NowTime()
-	loghlp.Debugf("RoomRescue room(%d) change_to_step(%d)", roomObj.RoomID, roomObj.RoomStep)
+	loghlp.Debugf("RoomRunning room(%d) change_to_step(%d)", roomObj.RoomID, roomObj.RoomStep)
 	// 广播房间数据
 	roomObj.PushRoomGameData()
 }
-func (roomObj *RoomRescue) IsAllReady() bool {
+func (roomObj *RoomRunning) IsAllReady() bool {
 	if len(roomObj.PlayerList) < 2 {
 		return false
 	}
@@ -136,57 +134,55 @@ func (roomObj *RoomRescue) IsAllReady() bool {
 	}
 	return rReady
 }
-func (roomObj *RoomRescue) Update(curTime int64) {
+
+func (roomObj *RoomRunning) Update(curTime int64) {
 	roomObj.EmptyRoom.Update(curTime)
 	switch roomObj.RoomStep {
-	case sconst.ERescueStepReady:
+	case sconst.ERunningStepReady:
 		{
 			if roomObj.IsAllReady() {
 				roomObj.initDataForReady()
-				roomObj.ChangeStep(sconst.ERescueStepRunning)
+				roomObj.ChangeStep(sconst.ERunningStepRunning)
 			}
 			break
 		}
-	case sconst.ERescueStepRunning:
+	case sconst.ERunningStepRunning:
 		{
-			if curTime-roomObj.StepTime >= int64(roomObj.MaxTime) {
-				loghlp.Infof("rescue room(%d) game end for time reach", roomObj.RoomID)
-				roomObj.calcRank()
-				roomObj.ChangeStep(sconst.ERescueStepEnd)
-			}
 			break
 		}
-	case sconst.ERescueStepEnd:
+	case sconst.ERunningStepEnd:
 		{
 			if curTime-roomObj.StepTime >= 3 {
 				roomObj.resetDataForGameEnd()
-				roomObj.ChangeStep(sconst.ERescueStepReady)
+				roomObj.ChangeStep(sconst.ERunningStepReady)
 			}
 			break
 		}
 	}
 }
-func (roomObj *RoomRescue) resetDataForGameEnd() {
+func (roomObj *RoomRunning) resetDataForGameEnd() {
 	for _, p := range roomObj.PlayerGameData {
 		if _, ok := roomObj.PlayerList[p.RoleID]; !ok {
 			delete(roomObj.PlayerGameData, p.RoleID)
 			continue
 		}
 		p.Ready = 0
-		p.Hp = 0
-		p.HpTime = 0
+		p.ReachTime = 0
+		p.ReachType = 0
 	}
 }
 
-func (roomObj *RoomRescue) initDataForReady() {
+func (roomObj *RoomRunning) initDataForReady() {
 	for _, p := range roomObj.PlayerGameData {
-		p.Hp = roomObj.MaxHp
+		p.ReachTime = 0
+		p.ReachType = 0
 	}
 }
-func (roomObj *RoomRescue) IsCanJoin() bool {
-	return roomObj.RoomStep == sconst.ERescueStepReady
+func (roomObj *RoomRunning) IsCanJoin() bool {
+	return roomObj.RoomStep == sconst.ERunningStepReady
 }
-func (roomObj *RoomRescue) LeavePlayer(roleID int64) {
+
+func (roomObj *RoomRunning) LeavePlayer(roleID int64) {
 	// 排队列表删除
 	for i, p := range roomObj.ToPlayPlayers {
 		if p.GetRoleID() == roleID {
@@ -200,43 +196,50 @@ func (roomObj *RoomRescue) LeavePlayer(roleID int64) {
 
 	// 自动视为出局
 	playerData := roomObj.HoldPlayerData(roleID)
-	playerData.Hp = 0
 	playerData.IsOnline = false
+	if playerData.ReachTime == 0 {
+		playerData.ReachTime = timeutil.NowTime()
+		playerData.ReachType = ERunningReachForOffline
+	}
+
 	roomObj.EmptyRoom.LeavePlayer(roleID)
 }
 
-func (roomObj *RoomRescue) calcRank() {
-	rankList := make([]*RescuePlayerData, 0)
+func (roomObj *RoomRunning) calcRank() {
+	rankList := make([]*RunningPlayerData, 0)
 	for _, p := range roomObj.PlayerGameData {
 		rankList = append(rankList, p)
 	}
 	sort.SliceStable(rankList, func(i, j int) bool {
-		if rankList[i].Hp != rankList[j].Hp {
-			return rankList[i].Hp > rankList[j].Hp
+		if rankList[i].ReachType != rankList[j].ReachType {
+			return rankList[i].ReachType < rankList[j].ReachType
 		}
-		if rankList[i].HpTime != rankList[j].HpTime {
-			return rankList[i].HpTime > rankList[j].HpTime
+		if rankList[i].ReachTime != rankList[j].ReachTime {
+			if rankList[i].ReachType == 0 {
+				return rankList[i].ReachTime < rankList[j].ReachTime
+			} else {
+				return rankList[i].ReachTime > rankList[j].ReachTime
+			}
 		}
 		return rankList[i].RoleID < rankList[j].RoleID
 	})
-	roomObj.HpRank = make([]int64, len(rankList))
+	roomObj.RunningRank = make([]int64, len(rankList))
 	for i, v := range rankList {
-		roomObj.HpRank[i] = v.RoleID
+		roomObj.RunningRank[i] = v.RoleID
 	}
 }
 
-func (roomObj *RoomRescue) CheckGameEnd() {
+func (roomObj *RoomRunning) CheckGameEnd() {
 	// 如果只剩下一个人了,游戏结束
-	aliveNum := int32(0)
+	reachNum := int32(0)
 	for _, p := range roomObj.PlayerGameData {
-		if p.Hp < 1 {
-			continue
+		if p.ReachTime > 0 {
+			reachNum++
 		}
-		aliveNum++
 	}
-	if aliveNum <= 1 {
-		loghlp.Infof("alive num <= 1, game end")
+	if reachNum >= int32(len(roomObj.PlayerGameData)) {
+		loghlp.Infof("reachNum >= int32(len(roomObj.PlayerGameData)), game end")
 		roomObj.calcRank()
-		roomObj.ChangeStep(sconst.ERescueStepEnd)
+		roomObj.ChangeStep(sconst.ERunningStepEnd)
 	}
 }

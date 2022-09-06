@@ -5,6 +5,7 @@ import "c_room_draw_guess.proto";
 import "c_room_undercover.proto";
 import "c_room_number_bomb.proto";
 import "c_room_rescue.proto";
+import "c_room_running.proto";
 option go_package = "roomcell/pkg/pb/pbclient";
 
 // 房间摘要
@@ -34,6 +35,7 @@ message RoomData
     RoomUndercoverDetail UndercoverRoomData = 6;    // 谁是卧底-房间游戏数据
     RoomNumberBombDetail NumberbombRoomData = 7;    // 数字炸弹-房间游戏数据
     RoomRescueDetail RescueRoomData = 8;            // 拯救玩家-房间游戏数据
+    RoomRunningDetail RunningRoomData = 9;          // 热血奔跑-房间游戏数据
 }
 
 // ECMsgRoomCreate = 1 // 创建房间

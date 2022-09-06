@@ -2,7 +2,7 @@ syntax = "proto3";
 package pbclient;
 option go_package = "roomcell/pkg/pb/pbclient";
 
-// 谁是卧底
+// 拯救玩家
 enum ERescueStep
 {
     ERescueStepReady        = 0;      // 准备阶段

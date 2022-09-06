@@ -117,4 +117,17 @@ func (s *HallRoom) RegisterMsgHandler() {
 		protocol.ECMsgGameRescueRecvGift,
 		hallroomhandler.HandlePlayerECMsgGameRescueRecvGift,
 	)
+
+	// 热血奔跑-发射炸弹
+	trframe.RegWorkMsgHandler(
+		protocol.ECMsgClassGame,
+		protocol.ECMsgGameRunningSendBomb,
+		hallroomhandler.HandlePlayerECMsgGameRunningSendBomb,
+	)
+	// 热血奔跑-到达终点
+	trframe.RegWorkMsgHandler(
+		protocol.ECMsgClassGame,
+		protocol.ECMsgGameRunningReachEnd,
+		hallroomhandler.HandlePlayerECMsgGameRunningReachEnd,
+	)
 }

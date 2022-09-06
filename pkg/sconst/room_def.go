@@ -6,6 +6,7 @@ const (
 	EGameRoomTypeUndercover   = 2 // 谁是卧底
 	EGameRoomTypeNumberBomb   = 3 // 数字炸弹
 	EGameRoomTypeRescuePlayer = 4 // 拯救玩家
+	EGameRoomTypeRunning      = 5 // 热血奔跑
 	//
 	EGameRoomTypeChat = 10 // 聊天房间
 
@@ -64,4 +65,11 @@ const (
 	NumberBombMinNumber = 1
 	NumberBombMaxNumber = 99
 	MaxRoomPlayerNum    = 12
+)
+
+// 热血奔跑
+const (
+	ERunningStepReady   = 0 // 准备阶段
+	ERunningStepRunning = 1 // 奔跑阶段
+	ERunningStepEnd     = 2 // 结束
 )

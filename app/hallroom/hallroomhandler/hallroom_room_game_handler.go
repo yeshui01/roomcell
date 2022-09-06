@@ -86,6 +86,20 @@ func HandleDrawReadyOpt(tmsgCtx *iframe.TMsgContext) (isok int32, retData interf
 			playData.Ready = req.Ready
 			break
 		}
+	case sconst.EGameRoomTypeRunning:
+		{
+			roomObj, ok := hallPlayer.RoomPtr.(*gameroom.RoomRunning)
+			if !ok {
+				loghlp.Errorf("RoomRunning convert fail")
+				return protocol.ECodeSysError, rep, iframe.EHandleContent
+			}
+			if roomObj.RoomStep != sconst.ERunningStepReady {
+				return protocol.ECodeInvalideOperation, rep, iframe.EHandleContent
+			}
+			playData := roomObj.HoldPlayerData(hallPlayer.GetRoleID())
+			playData.Ready = req.Ready
+			break
+		}
 	default:
 		{
 			loghlp.Errorf("no handled player ready opt,room type:%d", hallPlayer.RoomPtr.GetRoomType())

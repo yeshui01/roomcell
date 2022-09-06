@@ -61,4 +61,10 @@ const (
 	ECMsgGamePushRescueSetting  = 72 // 拯救玩家-设定推送
 	ECMsgGameRescueRecvGift     = 73 // 拯救玩家-收到礼物
 	ECMsgGamePushRescueRecvGift = 74 // 拯救玩家-收到礼物推送
+
+	ECMsgGamePushRunningRoomData = 90 // 热血奔跑-推送房间游戏数据
+	ECMsgGameRunningSendBomb     = 91 // 热血奔跑-发射炸弹
+	ECMsgGamePushRunningSendBomb = 92 // 热血奔跑-推送发射炸弹
+	ECMsgGameRunningReachEnd     = 93 // 热血奔跑-到达终点
+	ECMsgGamePushRunningReachEnd = 94 // 热血奔跑-推送有人到达终点了
 )
