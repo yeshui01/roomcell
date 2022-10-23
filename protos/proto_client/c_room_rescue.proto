@@ -70,3 +70,21 @@ message ECMsgGamePushRescueRecvGiftNotify
     int64 RoleID = 1;
     int32 ItemID = 2; // 道具ID
 }
+
+// ECMsgGameRescueChangeHp           = 75 // 拯救玩家-hp更改
+message ECMsgGameRescueChangeHpReq
+{
+    bool Add = 1;   // true:增加 false:减少
+    int32 Val = 2;  // 变化的hp值
+}
+message ECMsgGameRescueChangeHpRsp
+{
+}
+
+// ECMsgGamePushRescueChangeHp       = 76 // 拯救玩家-hp更改通知
+message ECMsgGamePushRescueChangeHpNotify
+{
+    int64 RoleID = 1;
+    bool Add = 2;   // true:增加 false:减少
+    int32 Val = 3;  // 变化的hp值
+}

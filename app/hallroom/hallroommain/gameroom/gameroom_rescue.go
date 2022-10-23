@@ -176,6 +176,9 @@ func (roomObj *RoomRescue) resetDataForGameEnd() {
 		p.Hp = 0
 		p.HpTime = 0
 	}
+	for _, p := range roomObj.EmptyRoom.PlayerList {
+		p.SetReady(0)
+	}
 }
 
 func (roomObj *RoomRescue) initDataForReady() {
@@ -239,4 +242,11 @@ func (roomObj *RoomRescue) CheckGameEnd() {
 		roomObj.calcRank()
 		roomObj.ChangeStep(sconst.ERescueStepEnd)
 	}
+}
+func (roomObj *RoomRescue) ToRoomDetail() *pbclient.RoomData {
+	roomData := roomObj.EmptyRoom.ToRoomDetail()
+	// 游戏数据
+	roomData.RescueRoomData = roomObj.ToGameDetailData()
+	// 结果
+	return roomData
 }

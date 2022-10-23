@@ -90,10 +90,6 @@ func HandlePlayerECMsgGameRescueRecvGift(tmsgCtx *iframe.TMsgContext) (isok int3
 		loghlp.Errorf("roomObj convert fail")
 		return protocol.ECodeSysError, rep, iframe.EHandleContent
 	}
-	// if roomObj.RoomStep != sconst.ERescueStepRunning {
-	// 	loghlp.Errorf("roomObj.RoomStep != sconst.ERescueStepRunning")
-	// 	return protocol.ECodeInvalideOperation, rep, iframe.EHandleContent
-	// }
 	if roomObj.RoomStep == sconst.ERescueStepRunning {
 		playerPlayData := roomObj.HoldPlayerData(roomPlayer.GetRoleID())
 		if playerPlayData == nil {
@@ -104,13 +100,67 @@ func HandlePlayerECMsgGameRescueRecvGift(tmsgCtx *iframe.TMsgContext) (isok int3
 			ItemID: req.ItemID,
 			RoleID: roomPlayer.GetRoleID(),
 		}
-		roomObj.BroadCastRoomMsg(roomPlayer.GetRoleID(),
+		roomObj.BroadCastRoomMsg(0,
 			protocol.ECMsgClassGame,
 			protocol.ECMsgGamePushRescueRecvGift,
 			pushMsg,
 		)
-		// 道具效果判断TODO
+	}
 
+	return protocol.ECodeSuccess, rep, iframe.EHandleContent
+}
+
+// 更改hp
+func HandlePlayerECMsgGameRescueChangeHp(tmsgCtx *iframe.TMsgContext) (isok int32, retData interface{}, rt iframe.IHandleResultType) {
+	req := &pbclient.ECMsgGameRescueChangeHpReq{}
+	if !trframe.DecodePBMessage(tmsgCtx.NetMessage, req) {
+		return protocol.ECodePBDecodeError, nil, iframe.EHandleContent
+	}
+	trframe.LogMsgInfo(tmsgCtx.NetMessage, req)
+
+	rep := &pbclient.ECMsgGameRescueChangeHpRsp{}
+	hallRoomGlobal := roomServe.GetGlobalData()
+	roomPlayer := hallRoomGlobal.FindRoomPlayer(tmsgCtx.NetMessage.SecondHead.ID)
+	if roomPlayer == nil {
+		loghlp.Errorf("not find room player:%d", tmsgCtx.NetMessage.SecondHead.ID)
+		return protocol.ECodeRoomPlayerNotFound, rep, iframe.EHandleContent
+	}
+	if roomPlayer.RoomPtr == nil {
+		loghlp.Errorf("room player(%d) roomptr is nil", tmsgCtx.NetMessage.SecondHead.ID)
+		return protocol.ECodeRoomPlayerNotInRoom, rep, iframe.EHandleContent
+	}
+	roomObj, ok := roomPlayer.RoomPtr.(*gameroom.RoomRescue)
+	if !ok {
+		loghlp.Errorf("roomObj convert fail")
+		return protocol.ECodeSysError, rep, iframe.EHandleContent
+	}
+	if roomObj.RoomStep == sconst.ERescueStepRunning {
+		playerPlayData := roomObj.HoldPlayerData(roomPlayer.GetRoleID())
+		if playerPlayData == nil {
+			return protocol.ECodeSysError, rep, iframe.EHandleContent
+		}
+
+		pushMsg := &pbclient.ECMsgGamePushRescueChangeHpNotify{
+			RoleID: roomPlayer.GetRoleID(),
+			Add:    req.Add,
+			Val:    req.Val,
+		}
+		roomObj.BroadCastRoomMsg(roomPlayer.GetRoleID(),
+			protocol.ECMsgClassGame,
+			protocol.ECMsgGamePushRescueChangeHp,
+			pushMsg,
+		)
+		if req.Add {
+			playerPlayData.Hp = playerPlayData.Hp + req.Val
+			if playerPlayData.Hp > roomObj.MaxHp {
+				playerPlayData.Hp = roomObj.MaxHp
+			}
+		} else {
+			playerPlayData.Hp = playerPlayData.Hp - req.Val
+			if playerPlayData.Hp < 0 {
+				playerPlayData.Hp = 0
+			}
+		}
 		// 检查游戏是否结束
 		roomObj.CheckGameEnd()
 	}

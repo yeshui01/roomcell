@@ -46,4 +46,11 @@ func (cfg *ConfigData) GetUndercoverCfgList() []*csvdef.Undercover {
 	return cfg.csvModules.undercoverModule.GetDataList()
 }
 
+func (cfg *ConfigData) GetWordTypeCfg(id int32) *csvdef.WordType {
+	return cfg.csvModules.wordTypeModule.GetData(id)
+}
+func (cfg *ConfigData) GetWordTypeCfgList() []*csvdef.WordType {
+	return cfg.csvModules.wordTypeModule.GetDataList()
+}
+
 // config export interface end

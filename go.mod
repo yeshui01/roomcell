@@ -5,6 +5,7 @@ go 1.16
 require (
 	fyne.io/fyne/v2 v2.2.3
 	github.com/360EntSecGroup-Skylar/excelize v1.4.1
+	github.com/bluele/gcache v0.0.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/flopp/go-findfont v0.1.0
 	github.com/gin-gonic/gin v1.8.1
@@ -17,7 +18,6 @@ require (
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.12.0
-	github.com/yuin/gopher-lua v0.0.0-20220504180219-658193537a64 // indirect
 	google.golang.org/protobuf v1.28.0
 	gorm.io/driver/mysql v1.3.6
 	gorm.io/driver/sqlite v1.3.6

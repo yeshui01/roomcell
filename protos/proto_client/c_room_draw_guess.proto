@@ -38,10 +38,11 @@ message DrawPainData
 message DrawPlayerGameData
 {
     int64 RoleID = 1;
-    int32 Score = 2;
-    int32 GuessCorrect = 3; // 猜对数量
-    int32 Ready = 4;        // 准备状态 1-准备 0-未准备
-    int32 TotalScore = 5;   // 游戏总积分
+    string Nickname = 2;
+    int32 Score = 3;
+    int32 GuessCorrect = 4; // 猜对数量
+    int32 Ready = 5;        // 准备状态 1-准备 0-未准备
+    int32 TotalScore = 6;   // 游戏总积分
 }
 
 // 房间游戏数据
@@ -57,6 +58,7 @@ message RoomDrawDetail {
     int64 DrawerRoleID = 9; // 当前画图的玩家
     repeated DrawPainData DrawOpts = 10; // 画图数据操作记录
     map<int64,DrawPlayerGameData> PlayersGameData = 11; // 玩家游戏数据
+    string WordsType = 12;   // 单词类型
 }
 
 // ECMsgGameReadyOpt              = 1 // 玩家准备操作
@@ -131,4 +133,11 @@ message ECMsgGameDrawSelectWordsReq
 message ECMsgGameDrawSelectWordsRsp
 {
 
+}
+
+// ECMsgGamePushDrawSetting  = 17 // 你画我猜-推送设置
+message ECMsgGamePushDrawSettingNotify
+{
+    int32 MaxTurnNum = 1;   // 最大游戏轮数
+    int32 DrawTime = 2;     // 每次绘图时间限制
 }

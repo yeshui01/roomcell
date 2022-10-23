@@ -3,8 +3,8 @@ accountCfgs:
     logLevel: 5
 
 accountLocalDB:
-  #dbFile: "E:\\tyh_work_card\\server_project\\roomcell\\bin\\dbdata\\cellroom.db"
-  dbFile: "G:\\work\\dangwan\\fs_project\\roomcell\\bin\\dbdata\\cellroom.db"
+  dbFile: "G:\\work\\external_project\\roomcell\\bin\\dbdata\\cellroom.db"
+  #dbFile: "F:\\work_home\\projects\\roomcell\\bin\\dbdata\\cellroom.db"
 accountDb:
   user: "tdev"
   host: "localhost"

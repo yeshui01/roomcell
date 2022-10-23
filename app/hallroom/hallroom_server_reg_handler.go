@@ -117,12 +117,18 @@ func (s *HallRoom) RegisterMsgHandler() {
 		protocol.ECMsgGameRescueRecvGift,
 		hallroomhandler.HandlePlayerECMsgGameRescueRecvGift,
 	)
+	// 拯救玩家-更改hp
+	trframe.RegWorkMsgHandler(
+		protocol.ECMsgClassGame,
+		protocol.ECMsgGameRescueChangeHp,
+		hallroomhandler.HandlePlayerECMsgGameRescueChangeHp,
+	)
 
 	// 热血奔跑-发射炸弹
 	trframe.RegWorkMsgHandler(
 		protocol.ECMsgClassGame,
-		protocol.ECMsgGameRunningSendBomb,
-		hallroomhandler.HandlePlayerECMsgGameRunningSendBomb,
+		protocol.ECMsgGameRunningSendItem,
+		hallroomhandler.HandlePlayerECMsgGameRunningSendItem,
 	)
 	// 热血奔跑-到达终点
 	trframe.RegWorkMsgHandler(
@@ -130,4 +136,11 @@ func (s *HallRoom) RegisterMsgHandler() {
 		protocol.ECMsgGameRunningReachEnd,
 		hallroomhandler.HandlePlayerECMsgGameRunningReachEnd,
 	)
+	// 热血奔跑-游戏设定
+	trframe.RegWorkMsgHandler(
+		protocol.ECMsgClassGame,
+		protocol.ECMsgGameRunningSetting,
+		hallroomhandler.HandlePlayerECMsgGameRunningSetting,
+	)
+
 }

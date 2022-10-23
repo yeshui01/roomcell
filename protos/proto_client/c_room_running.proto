@@ -25,6 +25,8 @@ message RoomRunningDetail {
     int64 StepTime = 2;     // 阶段对应的开始时间戳
     map<int64,RunningPlayerGameData> PlayersGameData = 3; // 玩家游戏数据
     repeated int64 RankList = 4;    // 排名列表(数组元素为玩家id)
+    int32 Distance = 5; // 距离
+    int32 GameTime = 6; // 游戏时间
 }
 // ECMsgGamePushRunningRoomData = 90 // 热血奔跑-推送房间游戏数据
 message ECMsgGamePushRunningRoomDataNotify
@@ -32,19 +34,21 @@ message ECMsgGamePushRunningRoomDataNotify
     RoomRunningDetail RoomGameData = 1;
 }
 
-// ECMsgGameRunningSendBomb            = 91 // 热血奔跑-发射炸弹
-message ECMsgGameRunningSendBombReq
+// ECMsgGameRunningSendItem            = 91 // 热血奔跑-发射炸弹
+message ECMsgGameRunningSendItemReq
 {
     int64 RoleID = 1;
+    int32 ItemID = 2;
 }
-message ECMsgGameRunningSendBombRsp
+message ECMsgGameRunningSendItemRsp
 {
 }
 
-// ECMsgGamePushRunningSendBomb        = 92 // 热血奔跑-推送发射炸弹
-message ECMsgGamePushRunningSendBombNotify
+// ECMsgGamePushRunningSendItem        = 92 // 热血奔跑-推送发射炸弹
+message ECMsgGamePushRunningSendItemNotify
 {
     int64 RoleID = 1;
+    int32 ItemID = 2;   // 道具id
 }
 
 // ECMsgGameRunningReachEnd            = 93 // 热血奔跑-到达终点
@@ -59,4 +63,21 @@ message ECMsgGameRunningReachEndRsp
 message ECMsgGamePushRunningReachEndNotify
 {
     int64 RoleID = 1;
+}
+
+// ECMsgGameRunningSetting      = 95 // 热血奔跑-游戏设定
+message ECMsgGameRunningSettingReq
+{
+    int32 Distance = 1; // 距离
+    int32 GameTime = 2; // 游戏时间
+}
+message ECMsgGameRunningSettingRsp
+{
+    
+}
+// ECMsgGamePushRunningSetting  = 96 // 热血奔跑-推送游戏设定
+message ECMsgGamePushRunningSettingNotify
+{
+    int32 Distance = 1; // 距离
+    int32 GameTime = 2; // 游戏时间
 }

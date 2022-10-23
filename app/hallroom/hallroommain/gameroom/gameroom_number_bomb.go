@@ -231,6 +231,9 @@ func (roomObj *RoomNumberBomb) resetDataForGameEnd() {
 		p.IsTalked = false
 		p.BombCount = 0
 	}
+	for _, p := range roomObj.EmptyRoom.PlayerList {
+		p.SetReady(0)
+	}
 	roomObj.TalkRoleNumber = 0
 	roomObj.TalkRoleID = 0
 	roomObj.SysNumber = 0
@@ -295,10 +298,10 @@ func (roomObj *RoomNumberBomb) PlayerGuess(roleID int64, guessNumber int32) bool
 		roomObj.ChangeStep(sconst.ENumberBombStepTurnEnd)
 		return true
 	} else if guessNumber > roomObj.SysNumber {
-		roomObj.MaxNumber = guessNumber
+		roomObj.MaxNumber = guessNumber - 1
 		roomObj.PushRangeChange()
 	} else {
-		roomObj.MinNumber = guessNumber
+		roomObj.MinNumber = guessNumber + 1
 		roomObj.PushRangeChange()
 	}
 	playerData.IsTalked = true

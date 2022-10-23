@@ -27,3 +27,8 @@ message ECMsgPlayerKeepHeartReq
 message ECMsgPlayerKeepHeartRsp
 {
 }
+
+// ECMsgPlayerPushLoginKick = 3 // 顶号登录踢人通知推送
+message ECMsgPlayerPushLoginKickNotify
+{
+}

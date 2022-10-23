@@ -1,4 +1,5 @@
 accountAddr: "http://localhost:15000"
+#accountAddr: "http://124.71.233.58:15000"
 logLevel: 5
 windowWidth: 600
 windowHeight: 480

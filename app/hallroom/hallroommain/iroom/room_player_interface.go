@@ -14,4 +14,6 @@ type IGamePlayer interface {
 	GetRoomID() int64
 	SendToClient(msgClass int32, msgType int32, pbMsg proto.Message)
 	ToClientPlayerInfo() *pbclient.RoomPlayer
+	GetReady() int32
+	SetReady(r int32)
 }

@@ -2,6 +2,7 @@ package accrouter
 
 import (
 	"net/http"
+	"regexp"
 	"roomcell/pkg/crossdef"
 	"roomcell/pkg/loghlp"
 	"roomcell/pkg/protocol"
@@ -40,9 +41,15 @@ func registerAccount(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	if len(req.Nickname) == 0 {
+		req.Nickname = req.UserName
+	}
 	accDB := accApp.GetAccountDB()
 	var userAccount OrmUser = OrmUser{
-		UserName: req.UserName,
+		UserName:     req.UserName,
+		Nickname:     req.Nickname,
+		ThirdPlat:    req.ThirdPlat,
+		ThirdAccount: req.ThirdAccount,
 	}
 	if len(req.UserName) < 5 || len(req.UserName) > 64 {
 		c.JSON(http.StatusOK, gin.H{
@@ -51,11 +58,38 @@ func registerAccount(c *gin.Context) {
 		})
 		return
 	}
+	regAcc := regexp.MustCompile("[^A-Za-z0-9]") // 只能是字母或者数字,这里匹配非数字和子母
+	if len(regAcc.FindAllString(req.UserName, -1)) > 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"code": protocol.ECodeParamError,
+			"msg":  "账号名字只能是字母和数字",
+		})
+		return
+	}
+	if len(req.Nickname) == 0 {
+		req.Nickname = req.UserName
+	}
+	if len(req.Nickname) < 5 || len(req.Nickname) > 64 {
+		c.JSON(http.StatusOK, gin.H{
+			"code": protocol.ECodeParamError,
+			"msg":  "昵称名字格式错误",
+		})
+		return
+	}
+
 	errdb := accDB.Model(userAccount).Where("user_name=?", req.UserName).First(&userAccount).Error
 	if errdb == nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": protocol.ECodeAccNameHasExisted,
 			"msg":  "账号已经存在",
+		})
+		return
+	}
+	errdb = accDB.Model(userAccount).Where("nickname=?", req.Nickname).First(&userAccount).Error
+	if errdb == nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": protocol.ECodeNicknameHasExisted,
+			"msg":  "昵称已经存在",
 		})
 		return
 	}
@@ -162,7 +196,7 @@ func loginAccount(c *gin.Context) {
 		return
 	}
 	// 生成token
-	token, errToken := genJwtToken(userAccount.UserID, userAccount.UserName, userAccount.DataZone)
+	token, errToken := genJwtToken(userAccount.UserID, userAccount.UserName, userAccount.Nickname, userAccount.DataZone)
 	if errToken != nil {
 		// 系统错误
 		c.JSON(http.StatusOK, gin.H{

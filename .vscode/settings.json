@@ -41,5 +41,7 @@
         // "debugConsole.errorForeground": "#HEXCODE",
         // "debugConsole.sourceForeground": "#HEXCODE",
         "debugConsole.infoForeground": "#f48771"
-    }
+    },
+    "editor.fontSize": 23,
+    "editor.fontFamily": "'Cascadia Code',Consolas, 'Courier New', monospace"
 }

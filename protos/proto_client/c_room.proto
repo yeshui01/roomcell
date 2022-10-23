@@ -22,6 +22,7 @@ message RoomPlayer
     int64 RoleID = 1;
     string Nickname = 2;
     int32 Icon = 3;
+    int32 Ready = 4;        // 准备状态 0-未准备 1-准备了
 }
 
 // 房间信息

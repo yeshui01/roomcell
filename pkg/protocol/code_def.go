@@ -1,3 +1,10 @@
+/*
+ * @Author: mknight(tianyh)
+ * @Mail: 824338670@qq.com
+ * @Date: 2022-10-08 15:15:20
+ * @LastEditTime: 2022-10-10 13:23:26
+ * @FilePath: \roomcell\pkg\protocol\code_def.go
+ */
 package protocol
 
 const (
@@ -18,8 +25,10 @@ const (
 	ECodeAccPasswordError        = 1003 // 账号密码错误
 	ECodeRoleNotExisted          = 1004 // 角色不存在
 	ECodeRoleHasOnline           = 1005 // 玩家已经在线
-	ECodeNotFindNotice           = 1106 // 未找到公告
-	ECodeRoomMaxPlayerNumLimit   = 1107 // 房间最大人数限制
+	ECodeNicknameHasExisted      = 1006 // 玩家昵称已经存在
+
+	ECodeNotFindNotice         = 1106 // 未找到公告
+	ECodeRoomMaxPlayerNumLimit = 1107 // 房间最大人数限制
 	// 房间
 	ECodeRoomCreateFail                  = 1100 // 房间创建失败
 	ECodeRoomPlayerHasInRoom             = 1101 // 玩家已经在房间

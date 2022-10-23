@@ -2,7 +2,7 @@
  * @Author: mknight(tianyh)
  * @Mail: 824338670@qq.com
  * @Date: 2022-06-15 14:14:17
- * @LastEditTime: 2022-06-15 14:14:17
+ * @LastEditTime: 2022-10-09 11:36:07
  * @Brief:接口导出
  */
 package trframe
@@ -36,6 +36,9 @@ func Stop() {
 }
 func GetFrameConfig() *tframeconfig.FrameConfig {
 	return frameCore.frameConfig
+}
+func AfterMsgJob(doJob func()) {
+	frameCore.AfterMsgJob(doJob)
 }
 func GetCurNodeIndex() int32 {
 	return frameCore.curWorkNode.NodeIndex()

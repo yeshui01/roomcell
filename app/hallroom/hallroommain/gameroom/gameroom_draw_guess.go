@@ -11,17 +11,45 @@ import (
 	"roomcell/pkg/timeutil"
 )
 
+// var WordsTypeDef = []string{
+// 	"食物",
+// 	"水果",
+// 	"蔬菜",
+// 	"调料",
+// 	"饮料",
+// 	"零食",
+// 	"干果",
+// 	"医学",
+// 	"职业",
+// 	"乐器",
+// 	"财经",
+// 	"汽车",
+// 	"交通",
+// 	"动物",
+// 	"生活用品",
+// 	"动漫",
+// 	"自然现象",
+// 	"运动",
+// 	"身体部位",
+// 	"植物",
+// 	"武器",
+// 	"成语"}
+
 // 玩家游戏数据
 type PlayerDrawData struct {
-	RoleID       int64 // 玩家ID
-	Score        int32 // 积分
-	GuessCorrect int32 // 猜对的次数
-	Ready        int32 // 准备状态 0-未准备 1-准备了
+	RoleID       int64  // 玩家ID
+	Nickname     string // 昵称
+	Score        int32  // 积分
+	GuessCorrect int32  // 猜对的次数
+	Ready        int32  // 准备状态 0-未准备 1-准备了
 	// 本次游戏猜测
 	CurWords string
 	CurScore int32
 }
-
+type SelectWords struct {
+	WordType int32  //类型
+	Words    string // 单词
+}
 type RoomDrawGuess struct {
 	*EmptyRoom
 	RoomStep      int32
@@ -32,10 +60,11 @@ type RoomDrawGuess struct {
 	DrawTime   int32 // 每次游戏绘画时间(秒)
 	CurTurn    int32 // 当前第几轮
 	// 当前房间游戏数据
-	CurWords       string   // 当前单词
-	WordsToSelect  []string // 待选词组列表
-	AnswerList     []int64  // 回答正确的玩家列表,按顺序
-	DrawerRoleID   int64    // 当前画图的玩家
+	CurWords       string // 当前单词
+	CurWordType    int32
+	WordsToSelect  []*SelectWords // 待选词组列表
+	AnswerList     []int64        // 回答正确的玩家列表,按顺序
+	DrawerRoleID   int64          // 当前画图的玩家
 	PlayerGameData map[int64]*PlayerDrawData
 	DrawEndTime    int64 // 本次画画结束时间,会随着猜对的人数动态变化
 	// 画图数据
@@ -56,7 +85,8 @@ func NewRoomDrawGuess(roomID int64, globalObj iroom.IRoomGlobal) *RoomDrawGuess 
 		RoomStep:       sconst.EDrawGuessStepReady,
 		StepTime:       timeutil.NowTime(),
 		PlayerGameData: make(map[int64]*PlayerDrawData),
-		DrawTime:       120,
+		DrawTime:       45,
+		MaxTurnNum:     1,
 	}
 	r.RoomType = sconst.EGameRoomTypeDrawGuess
 	return r
@@ -92,6 +122,7 @@ func (roomObj *RoomDrawGuess) Update(curTime int64) {
 				roomObj.RewardScore = 10 // 测试分数
 				roomObj.DrawEndTime = timeutil.NowTime() + int64(roomObj.DrawTime)
 				roomObj.CurWords = ""
+				roomObj.CurWordType = 0
 				roomObj.AnswerList = make([]int64, 0)
 				roomObj.ChangeStep(sconst.EDrawGuessStepSelectWords) // 放到选词之后
 			}
@@ -137,7 +168,8 @@ func (roomObj *RoomDrawGuess) Update(curTime int64) {
 						loghlp.Debugf("room(%d) will enter next turn, MaxTurnNum:%d,NextCurTurn:%d, ", roomObj.RoomID, roomObj.MaxTurnNum, roomObj.CurTurn)
 						//清理单词
 						roomObj.CurWords = ""
-						roomObj.WordsToSelect = make([]string, 0)
+						roomObj.CurWordType = 0
+						roomObj.WordsToSelect = make([]*SelectWords, 0)
 						roomObj.ChangeStep(sconst.EDrawGuessStepSelectDrawer)
 					}
 				} else {
@@ -156,7 +188,8 @@ func (roomObj *RoomDrawGuess) Update(curTime int64) {
 				roomObj.CurTurn = 1
 				roomObj.DrawerRoleID = 0
 				roomObj.CurWords = ""
-				roomObj.WordsToSelect = make([]string, 0)
+				roomObj.CurWordType = 0
+				roomObj.WordsToSelect = make([]*SelectWords, 0)
 				roomObj.ChangeStep(sconst.EDrawGuessStepReady)
 			}
 			break
@@ -166,16 +199,26 @@ func (roomObj *RoomDrawGuess) Update(curTime int64) {
 
 func (roomObj *RoomDrawGuess) ToGameDetailData() *pbclient.RoomDrawDetail {
 	gameData := &pbclient.RoomDrawDetail{
-		MaxTurnNum:    roomObj.MaxTurnNum,
-		DrawTime:      roomObj.DrawTime,
-		CurTurn:       roomObj.CurTurn,
-		RoomStep:      roomObj.RoomStep,
-		StepTime:      roomObj.StepTime,
-		CurWords:      roomObj.CurWords,
-		WordsToSelect: roomObj.WordsToSelect,
-		DrawerRoleID:  roomObj.DrawerRoleID,
-		DrawOpts:      roomObj.DrawOpts,
-		DrawEndTime:   roomObj.DrawEndTime,
+		MaxTurnNum: roomObj.MaxTurnNum,
+		DrawTime:   roomObj.DrawTime,
+		CurTurn:    roomObj.CurTurn,
+		RoomStep:   roomObj.RoomStep,
+		StepTime:   roomObj.StepTime,
+		CurWords:   roomObj.CurWords,
+		//WordsType:  roomObj.CurWordType,
+		//WordsToSelect: roomObj.WordsToSelect,
+		DrawerRoleID: roomObj.DrawerRoleID,
+		DrawOpts:     roomObj.DrawOpts,
+		DrawEndTime:  roomObj.DrawEndTime,
+	}
+	wordTypeCfg := configdata.Instance().GetWordTypeCfg(roomObj.CurWordType)
+	if wordTypeCfg != nil {
+		gameData.WordsType = wordTypeCfg.TypeName
+	} else {
+		gameData.WordsType = "unknown"
+	}
+	for _, v := range roomObj.WordsToSelect {
+		gameData.WordsToSelect = append(gameData.WordsToSelect, v.Words)
 	}
 	// 玩家数据
 	gameData.PlayersGameData = make(map[int64]*pbclient.DrawPlayerGameData)
@@ -185,6 +228,7 @@ func (roomObj *RoomDrawGuess) ToGameDetailData() *pbclient.RoomDrawDetail {
 			TotalScore:   v.Score,
 			GuessCorrect: v.GuessCorrect,
 			Score:        v.CurScore,
+			Nickname:     v.Nickname,
 		}
 	}
 	return gameData
@@ -199,6 +243,8 @@ func (roomObj *RoomDrawGuess) ToRoomDetail() *pbclient.RoomData {
 
 func (roomObj *RoomDrawGuess) JoinPlayer(p iroom.IGamePlayer) {
 	roomObj.EmptyRoom.JoinPlayer(p)
+	playerData := roomObj.HoldPlayerData(p.GetRoleID())
+	playerData.Nickname = p.GetName()
 	roomObj.ToDrawPlayers = append(roomObj.ToDrawPlayers, p) // 按进入房间的顺序
 }
 
@@ -257,14 +303,17 @@ func (roomObj *RoomDrawGuess) GenWordsSelectList() {
 		copy(selectTypeList, typeWordsList)
 	}
 	// 每个类型随机一个单词
-	roomObj.WordsToSelect = make([]string, 0)
+	roomObj.WordsToSelect = make([]*SelectWords, 0)
 	for _, selectType := range selectTypeList {
 		if len(selectType.WordsList) < 1 {
 			continue
 		}
 		idx := rand.Intn(len(selectType.WordsList))
 		if idx >= 0 && idx < len(selectType.WordsList) {
-			roomObj.WordsToSelect = append(roomObj.WordsToSelect, selectType.WordsList[idx].Word)
+			roomObj.WordsToSelect = append(roomObj.WordsToSelect, &SelectWords{
+				Words:    selectType.WordsList[idx].Word,
+				WordType: selectType.WordType,
+			})
 		}
 	}
 	loghlp.Infof("GenWordsSelectList,room(%d), to select words:%+v", roomObj.RoomID, roomObj.WordsToSelect)
@@ -362,6 +411,7 @@ func (roomObj *RoomDrawGuess) ResetPlayerThisTimesData() {
 	for _, p := range roomObj.PlayerGameData {
 		p.CurScore = 0
 		p.CurWords = ""
+		roomObj.CurWordType = 0
 	}
 }
 
@@ -374,8 +424,12 @@ func (roomObj *RoomDrawGuess) ResetPlayerPlayData() {
 	for _, p := range roomObj.PlayerGameData {
 		p.CurScore = 0
 		p.CurWords = ""
+		roomObj.CurWordType = 0
 		p.Score = 0
 		p.GuessCorrect = 0
 		p.Ready = 0
+	}
+	for _, p := range roomObj.EmptyRoom.PlayerList {
+		p.SetReady(0)
 	}
 }

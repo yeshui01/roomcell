@@ -27,6 +27,7 @@ func (cfg *ConfigData) LoadConfig() {
 			} else {
 				typeList := &DrawTypeWordsCfg{
 					WordsList: nil,
+					WordType:  v.WordType,
 				}
 				typeList.WordsList = append(typeList.WordsList, v)
 				cfg.typeDrawWordsConfig[v.WordType] = typeList

@@ -1,3 +1,10 @@
+/*
+ * @Author: mknight(tianyh)
+ * @Mail: 824338670@qq.com
+ * @Date: 2022-10-08 15:15:20
+ * @LastEditTime: 2022-10-14 10:47:59
+ * @FilePath: \roomcell\pkg\protocol\protocol_client.go
+ */
 package protocol
 
 // 客户端的从2开始
@@ -9,8 +16,9 @@ const (
 
 // ECMsgClassPlayer = 2
 const (
-	ECMsgPlayerLoginHall = 1 // 登录大厅
-	ECMsgPlayerKeepHeart = 2 // 心跳
+	ECMsgPlayerLoginHall     = 1 // 登录大厅
+	ECMsgPlayerKeepHeart     = 2 // 心跳
+	ECMsgPlayerPushLoginKick = 3 // 顶号登录踢人通知推送
 )
 
 // ECMsgClassRoom   = 3 // 房间
@@ -38,6 +46,7 @@ const (
 	ECMsgGameGrawSetting      = 14 // 你画我猜-房主设定游戏规则
 	ECMsgGamePushDrawRoomData = 15 // 你画我猜-推送画图房间游戏数据更新
 	ECMsgGameDrawSelectWords  = 16 // 选择词语
+	ECMsgGamePushDrawSetting  = 17 // 你画我猜-推送设置
 
 	ECMsgGamePushUndercoverRoomData     = 30 // 谁是卧底-推送房间游戏数据
 	ECMsgGamePushPlayerUnderWords       = 31 // 谁是卧底-推送玩家卧底词汇更新
@@ -61,10 +70,14 @@ const (
 	ECMsgGamePushRescueSetting  = 72 // 拯救玩家-设定推送
 	ECMsgGameRescueRecvGift     = 73 // 拯救玩家-收到礼物
 	ECMsgGamePushRescueRecvGift = 74 // 拯救玩家-收到礼物推送
+	ECMsgGameRescueChangeHp     = 75 // 拯救玩家-hp更改
+	ECMsgGamePushRescueChangeHp = 76 // 拯救玩家-hp更改通知
 
 	ECMsgGamePushRunningRoomData = 90 // 热血奔跑-推送房间游戏数据
-	ECMsgGameRunningSendBomb     = 91 // 热血奔跑-发射炸弹
-	ECMsgGamePushRunningSendBomb = 92 // 热血奔跑-推送发射炸弹
+	ECMsgGameRunningSendItem     = 91 // 热血奔跑-发射炸弹
+	ECMsgGamePushRunningSendItem = 92 // 热血奔跑-推送发射炸弹
 	ECMsgGameRunningReachEnd     = 93 // 热血奔跑-到达终点
 	ECMsgGamePushRunningReachEnd = 94 // 热血奔跑-推送有人到达终点了
+	ECMsgGameRunningSetting      = 95 // 热血奔跑-游戏设定
+	ECMsgGamePushRunningSetting  = 96 // 热血奔跑-推送游戏设定
 )

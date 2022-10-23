@@ -3,7 +3,10 @@
 请求:
 {
     "user_name": "测试账号7",
-    "pswd": "12345",            
+    "pswd": "12345",
+    "nickname": "xxxx",
+    "third_plat": "xxxx",
+    "third_account": "xxxx",                    
     "sign": "预留,目前不用",
     "cltx": 11111
 }

@@ -1,3 +1,10 @@
+/*
+ * @Author: mknight(tianyh)
+ * @Mail: 824338670@qq.com
+ * @Date: 2022-08-15 11:07:29
+ * @LastEditTime: 2022-09-16 14:09:36
+ * @FilePath: \roomcell\app\cellclient\cell_client_draw_guess.go
+ */
 package cellclient
 
 import (
@@ -23,6 +30,11 @@ type DrawBoard struct {
 	listWidget *widget.List
 }
 
+/**
+ * @description: test
+ * @param {*desktop.MouseEvent} me
+ * @return {*}
+ */
 func (d *DrawBoard) MouseIn(me *desktop.MouseEvent) {
 	fmt.Println("MouseIn")
 }

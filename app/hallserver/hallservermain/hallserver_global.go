@@ -87,8 +87,9 @@ func (hg *HallServerGlobal) SavePlayer(player *HallPlayer) {
 
 	// 发送到db保存
 	// 发送消息
+	roleID := player.RoleID
 	cb := func(okCode int32, msgData []byte, env *iframe.TRRemoteMsgEnv) {
-		loghlp.Infof("save player callback success,okCode:%d", okCode)
+		loghlp.Infof("save player(%d) callback success,okCode:%d", roleID, okCode)
 		return
 	}
 	// 这里的session是frameSession
@@ -115,7 +116,7 @@ func (hg *HallServerGlobal) HandlePlayerOffline(player *HallPlayer) {
 func (hg *HallServerGlobal) UpdateRemoveIdlePlayer(curTime int64) {
 	var idlePlayers []int64
 	for k, v := range hg.playerList {
-		if !v.IsOnline && curTime-v.OfflineTime >= 900 {
+		if !v.IsOnline && curTime-v.OfflineTime >= 300 {
 			loghlp.Debugf("will remove idleplayer(%d) for offline timeout, offlineTime:%d", k, v.OfflineTime)
 			idlePlayers = append(idlePlayers, k)
 			if len(idlePlayers) >= 200 {
@@ -125,7 +126,7 @@ func (hg *HallServerGlobal) UpdateRemoveIdlePlayer(curTime int64) {
 		} else if v.IsOnline {
 			if v.GetHeartTime() == 0 {
 				v.UpdateHeartTime(curTime)
-			} else if curTime-v.GetHeartTime() >= 900 {
+			} else if curTime-v.GetHeartTime() >= 300 {
 				loghlp.Debugf("will remove idleplayer(%d) for hearttime timeout, hearttime:%d", k, v.GetHeartTime())
 				idlePlayers = append(idlePlayers, k)
 				if len(idlePlayers) >= 200 {

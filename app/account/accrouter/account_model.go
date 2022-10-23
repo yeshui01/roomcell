@@ -1,12 +1,22 @@
+/*
+ * @Author: mknight(tianyh)
+ * @Mail: 824338670@qq.com
+ * @Date: 2022-10-08 15:15:19
+ * @LastEditTime: 2022-10-14 10:25:19
+ * @FilePath: \roomcell\app\account\accrouter\account_model.go
+ */
 package accrouter
 
 type OrmUser struct {
 	UserID       int64  `gorm:"column:user_id;primaryKey"`
 	UserName     string `gorm:"column:user_name"`
+	Nickname     string `gorm:"column:nickname"`
 	Pswd         string `gorm:"column:pswd"`
 	RegisterTime int64  `gorm:"column:register_time"`
 	Status       int32  `gorm:"column:status"`
 	DataZone     int32  `gorm:"column:data_zone"`
+	ThirdPlat    string `gorm:"column:third_plat"`
+	ThirdAccount string `gorm:"column:third_account"`
 }
 
 func (tbuser *OrmUser) TableName() string {

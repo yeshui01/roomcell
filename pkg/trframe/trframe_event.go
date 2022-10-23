@@ -61,6 +61,12 @@ func (tf *TRFrame) onNetMessage(frameSession *FrameSession, msg *evhub.NetMessag
 	}
 	// 其他消息,分发处理
 	tf.msgDispatcher.Dispatch(frameSession, msg, customData)
+	if len(tf.msgDoneList) > 0 {
+		for _, doJob := range tf.msgDoneList {
+			doJob()
+		}
+		tf.msgDoneList = nil
+	}
 }
 
 // 连接关闭

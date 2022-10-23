@@ -16,6 +16,7 @@ type CSVModuleMgr struct {
 	formationModule   *csvdef.FormationCfgModule
 	drawGuessModule   *csvdef.DrawGuessCfgModule
 	undercoverModule *csvdef.UndercoverCfgModule
+	wordTypeModule *csvdef.WordTypeCfgModule
 	// --------- csvmodule tag1 end --------------------
 }
 
@@ -29,6 +30,7 @@ func NewCSVModuleMgr(csvPath string) *CSVModuleMgr {
 		formationModule:   csvdef.NewFormationCfgModule(),
 		drawGuessModule:   csvdef.NewDrawGuessCfgModule(),
 		undercoverModule: csvdef.NewUndercoverCfgModule(),
+		wordTypeModule: csvdef.NewWordTypeCfgModule(),
 		// --------- csvmodule tag2 end --------------------
 	}
 }
@@ -41,5 +43,6 @@ func (mgr *CSVModuleMgr) LoadAll() {
 	// mgr.formationModule.Load(csvparse.ParseCsvFileLine(fmt.Sprintf("%s/%s", mgr.filePath, "Formation.csv")))
 	mgr.drawGuessModule.Load(csvparse.ParseCsvFileLine(fmt.Sprintf("%s/%s", mgr.filePath, "draw_guess.csv")))
 	mgr.undercoverModule.Load(csvparse.ParseCsvFileLine(fmt.Sprintf("%s/%s",mgr.filePath, "undercover.csv")))
+	mgr.wordTypeModule.Load(csvparse.ParseCsvFileLine(fmt.Sprintf("%s/%s",mgr.filePath, "word_type.csv")))
 	// --------- csvmodule tag3 end --------------------
 }

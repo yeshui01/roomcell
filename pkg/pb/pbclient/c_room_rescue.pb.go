@@ -594,6 +594,164 @@ func (x *ECMsgGamePushRescueRecvGiftNotify) GetItemID() int32 {
 	return 0
 }
 
+// ECMsgGameRescueChangeHp           = 75 // 拯救玩家-hp更改
+type ECMsgGameRescueChangeHpReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Add bool  `protobuf:"varint,1,opt,name=Add,proto3" json:"Add,omitempty"` // true:增加 false:减少
+	Val int32 `protobuf:"varint,2,opt,name=Val,proto3" json:"Val,omitempty"` // 变化的hp值
+}
+
+func (x *ECMsgGameRescueChangeHpReq) Reset() {
+	*x = ECMsgGameRescueChangeHpReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_c_room_rescue_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ECMsgGameRescueChangeHpReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ECMsgGameRescueChangeHpReq) ProtoMessage() {}
+
+func (x *ECMsgGameRescueChangeHpReq) ProtoReflect() protoreflect.Message {
+	mi := &file_c_room_rescue_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ECMsgGameRescueChangeHpReq.ProtoReflect.Descriptor instead.
+func (*ECMsgGameRescueChangeHpReq) Descriptor() ([]byte, []int) {
+	return file_c_room_rescue_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ECMsgGameRescueChangeHpReq) GetAdd() bool {
+	if x != nil {
+		return x.Add
+	}
+	return false
+}
+
+func (x *ECMsgGameRescueChangeHpReq) GetVal() int32 {
+	if x != nil {
+		return x.Val
+	}
+	return 0
+}
+
+type ECMsgGameRescueChangeHpRsp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *ECMsgGameRescueChangeHpRsp) Reset() {
+	*x = ECMsgGameRescueChangeHpRsp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_c_room_rescue_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ECMsgGameRescueChangeHpRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ECMsgGameRescueChangeHpRsp) ProtoMessage() {}
+
+func (x *ECMsgGameRescueChangeHpRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_c_room_rescue_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ECMsgGameRescueChangeHpRsp.ProtoReflect.Descriptor instead.
+func (*ECMsgGameRescueChangeHpRsp) Descriptor() ([]byte, []int) {
+	return file_c_room_rescue_proto_rawDescGZIP(), []int{10}
+}
+
+// ECMsgGamePushRescueChangeHp       = 76 // 拯救玩家-hp更改通知
+type ECMsgGamePushRescueChangeHpNotify struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	RoleID int64 `protobuf:"varint,1,opt,name=RoleID,proto3" json:"RoleID,omitempty"`
+	Add    bool  `protobuf:"varint,2,opt,name=Add,proto3" json:"Add,omitempty"` // true:增加 false:减少
+	Val    int32 `protobuf:"varint,3,opt,name=Val,proto3" json:"Val,omitempty"` // 变化的hp值
+}
+
+func (x *ECMsgGamePushRescueChangeHpNotify) Reset() {
+	*x = ECMsgGamePushRescueChangeHpNotify{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_c_room_rescue_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ECMsgGamePushRescueChangeHpNotify) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ECMsgGamePushRescueChangeHpNotify) ProtoMessage() {}
+
+func (x *ECMsgGamePushRescueChangeHpNotify) ProtoReflect() protoreflect.Message {
+	mi := &file_c_room_rescue_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ECMsgGamePushRescueChangeHpNotify.ProtoReflect.Descriptor instead.
+func (*ECMsgGamePushRescueChangeHpNotify) Descriptor() ([]byte, []int) {
+	return file_c_room_rescue_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *ECMsgGamePushRescueChangeHpNotify) GetRoleID() int64 {
+	if x != nil {
+		return x.RoleID
+	}
+	return 0
+}
+
+func (x *ECMsgGamePushRescueChangeHpNotify) GetAdd() bool {
+	if x != nil {
+		return x.Add
+	}
+	return false
+}
+
+func (x *ECMsgGamePushRescueChangeHpNotify) GetVal() int32 {
+	if x != nil {
+		return x.Val
+	}
+	return 0
+}
+
 var File_c_room_rescue_proto protoreflect.FileDescriptor
 
 var file_c_room_rescue_proto_rawDesc = []byte{
@@ -660,15 +818,27 @@ var file_c_room_rescue_proto_rawDesc = []byte{
 	0x52, 0x65, 0x63, 0x76, 0x47, 0x69, 0x66, 0x74, 0x4e, 0x6f, 0x74, 0x69, 0x66, 0x79, 0x12, 0x16,
 	0x0a, 0x06, 0x52, 0x6f, 0x6c, 0x65, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06,
 	0x52, 0x6f, 0x6c, 0x65, 0x49, 0x44, 0x12, 0x16, 0x0a, 0x06, 0x49, 0x74, 0x65, 0x6d, 0x49, 0x44,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x49, 0x74, 0x65, 0x6d, 0x49, 0x44, 0x2a, 0x4f,
-	0x0a, 0x0b, 0x45, 0x52, 0x65, 0x73, 0x63, 0x75, 0x65, 0x53, 0x74, 0x65, 0x70, 0x12, 0x14, 0x0a,
-	0x10, 0x45, 0x52, 0x65, 0x73, 0x63, 0x75, 0x65, 0x53, 0x74, 0x65, 0x70, 0x52, 0x65, 0x61, 0x64,
-	0x79, 0x10, 0x00, 0x12, 0x16, 0x0a, 0x12, 0x45, 0x52, 0x65, 0x73, 0x63, 0x75, 0x65, 0x53, 0x74,
-	0x65, 0x70, 0x52, 0x75, 0x6e, 0x6e, 0x69, 0x6e, 0x67, 0x10, 0x01, 0x12, 0x12, 0x0a, 0x0e, 0x45,
-	0x52, 0x65, 0x73, 0x63, 0x75, 0x65, 0x53, 0x74, 0x65, 0x70, 0x45, 0x6e, 0x64, 0x10, 0x02, 0x42,
-	0x1a, 0x5a, 0x18, 0x72, 0x6f, 0x6f, 0x6d, 0x63, 0x65, 0x6c, 0x6c, 0x2f, 0x70, 0x6b, 0x67, 0x2f,
-	0x70, 0x62, 0x2f, 0x70, 0x62, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x49, 0x74, 0x65, 0x6d, 0x49, 0x44, 0x22, 0x40,
+	0x0a, 0x1a, 0x45, 0x43, 0x4d, 0x73, 0x67, 0x47, 0x61, 0x6d, 0x65, 0x52, 0x65, 0x73, 0x63, 0x75,
+	0x65, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x48, 0x70, 0x52, 0x65, 0x71, 0x12, 0x10, 0x0a, 0x03,
+	0x41, 0x64, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x03, 0x41, 0x64, 0x64, 0x12, 0x10,
+	0x0a, 0x03, 0x56, 0x61, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x03, 0x56, 0x61, 0x6c,
+	0x22, 0x1c, 0x0a, 0x1a, 0x45, 0x43, 0x4d, 0x73, 0x67, 0x47, 0x61, 0x6d, 0x65, 0x52, 0x65, 0x73,
+	0x63, 0x75, 0x65, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x48, 0x70, 0x52, 0x73, 0x70, 0x22, 0x5f,
+	0x0a, 0x21, 0x45, 0x43, 0x4d, 0x73, 0x67, 0x47, 0x61, 0x6d, 0x65, 0x50, 0x75, 0x73, 0x68, 0x52,
+	0x65, 0x73, 0x63, 0x75, 0x65, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x48, 0x70, 0x4e, 0x6f, 0x74,
+	0x69, 0x66, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x52, 0x6f, 0x6c, 0x65, 0x49, 0x44, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x03, 0x52, 0x06, 0x52, 0x6f, 0x6c, 0x65, 0x49, 0x44, 0x12, 0x10, 0x0a, 0x03, 0x41,
+	0x64, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x03, 0x41, 0x64, 0x64, 0x12, 0x10, 0x0a,
+	0x03, 0x56, 0x61, 0x6c, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x03, 0x56, 0x61, 0x6c, 0x2a,
+	0x4f, 0x0a, 0x0b, 0x45, 0x52, 0x65, 0x73, 0x63, 0x75, 0x65, 0x53, 0x74, 0x65, 0x70, 0x12, 0x14,
+	0x0a, 0x10, 0x45, 0x52, 0x65, 0x73, 0x63, 0x75, 0x65, 0x53, 0x74, 0x65, 0x70, 0x52, 0x65, 0x61,
+	0x64, 0x79, 0x10, 0x00, 0x12, 0x16, 0x0a, 0x12, 0x45, 0x52, 0x65, 0x73, 0x63, 0x75, 0x65, 0x53,
+	0x74, 0x65, 0x70, 0x52, 0x75, 0x6e, 0x6e, 0x69, 0x6e, 0x67, 0x10, 0x01, 0x12, 0x12, 0x0a, 0x0e,
+	0x45, 0x52, 0x65, 0x73, 0x63, 0x75, 0x65, 0x53, 0x74, 0x65, 0x70, 0x45, 0x6e, 0x64, 0x10, 0x02,
+	0x42, 0x1a, 0x5a, 0x18, 0x72, 0x6f, 0x6f, 0x6d, 0x63, 0x65, 0x6c, 0x6c, 0x2f, 0x70, 0x6b, 0x67,
+	0x2f, 0x70, 0x62, 0x2f, 0x70, 0x62, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -684,7 +854,7 @@ func file_c_room_rescue_proto_rawDescGZIP() []byte {
 }
 
 var file_c_room_rescue_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_c_room_rescue_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_c_room_rescue_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_c_room_rescue_proto_goTypes = []interface{}{
 	(ERescueStep)(0),                          // 0: pbclient.ERescueStep
 	(*RescuePlayerGameData)(nil),              // 1: pbclient.RescuePlayerGameData
@@ -696,10 +866,13 @@ var file_c_room_rescue_proto_goTypes = []interface{}{
 	(*ECMsgGameRescueRecvGiftReq)(nil),        // 7: pbclient.ECMsgGameRescueRecvGiftReq
 	(*ECMsgGameRescueRecvGiftRsp)(nil),        // 8: pbclient.ECMsgGameRescueRecvGiftRsp
 	(*ECMsgGamePushRescueRecvGiftNotify)(nil), // 9: pbclient.ECMsgGamePushRescueRecvGiftNotify
-	nil, // 10: pbclient.RoomRescueDetail.PlayersGameDataEntry
+	(*ECMsgGameRescueChangeHpReq)(nil),        // 10: pbclient.ECMsgGameRescueChangeHpReq
+	(*ECMsgGameRescueChangeHpRsp)(nil),        // 11: pbclient.ECMsgGameRescueChangeHpRsp
+	(*ECMsgGamePushRescueChangeHpNotify)(nil), // 12: pbclient.ECMsgGamePushRescueChangeHpNotify
+	nil, // 13: pbclient.RoomRescueDetail.PlayersGameDataEntry
 }
 var file_c_room_rescue_proto_depIdxs = []int32{
-	10, // 0: pbclient.RoomRescueDetail.PlayersGameData:type_name -> pbclient.RoomRescueDetail.PlayersGameDataEntry
+	13, // 0: pbclient.RoomRescueDetail.PlayersGameData:type_name -> pbclient.RoomRescueDetail.PlayersGameDataEntry
 	2,  // 1: pbclient.ECMsgGamePushRescueRoomDataNotify.RoomGameData:type_name -> pbclient.RoomRescueDetail
 	1,  // 2: pbclient.RoomRescueDetail.PlayersGameDataEntry.value:type_name -> pbclient.RescuePlayerGameData
 	3,  // [3:3] is the sub-list for method output_type
@@ -823,6 +996,42 @@ func file_c_room_rescue_proto_init() {
 				return nil
 			}
 		}
+		file_c_room_rescue_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ECMsgGameRescueChangeHpReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_c_room_rescue_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ECMsgGameRescueChangeHpRsp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_c_room_rescue_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ECMsgGamePushRescueChangeHpNotify); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -830,7 +1039,7 @@ func file_c_room_rescue_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_c_room_rescue_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   10,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -8,6 +8,7 @@ import (
 	"roomcell/pkg/pb/pbclient"
 	"roomcell/pkg/pb/pbserver"
 	"roomcell/pkg/protocol"
+	"roomcell/pkg/sconst"
 	"roomcell/pkg/trframe"
 	"roomcell/pkg/trframe/iframe"
 	"roomcell/pkg/trframe/trnode"
@@ -60,7 +61,7 @@ func HandlePlayerLoginHall(tmsgCtx *iframe.TMsgContext) (isok int32, retData int
 
 	loginReq := &pbserver.ESMsgPlayerLoginHallReq{
 		UserID:   tokenRes.UserID,
-		Account:  tokenRes.Account,
+		Account:  tokenRes.Nickname,
 		DataZone: tokenRes.DataZone,
 		GateInfo: &pbserver.ServerNodeInfo{
 			ZoneID:    trframe.GetFrameConfig().ZoneID,
@@ -182,11 +183,18 @@ func HandlePlayerKickout(tmsgCtx *iframe.TMsgContext) (isok int32, retData inter
 	gateUser := hallGateServe.GetUserManager().GetGateUser(req.RoleID)
 	if gateUser != nil {
 		loghlp.Warnf("kickout player(%d), reason:%d succ!!!", gateUser.GetGateConnect().UserID, req.Reason)
-		// 网关断掉
-		// if req.Reason == sconst.EPlayerOfflineReasonReplaceLogin {
-		// }
 
 		gateConnect := gateUser.GetGateConnect()
+		if req.Reason == sconst.EPlayerOfflineReasonReplaceLogin {
+			loghlp.Warnf("role(%d) be kickout for replace login", req.RoleID)
+			// 发送一个提示消息
+			tipMsg := evhub.MakeMessage(protocol.ECMsgClassPlayer,
+				protocol.ECMsgPlayerPushLoginKick,
+				make([]byte, 0),
+			)
+			gateConnect.SendMsg(tipMsg)
+		}
+		// 网关断掉
 		emptyMsg := evhub.MakeEmptyMessage()
 		emptyMsg.Head.HasSecond = 1
 		emptyMsg.SecondHead = &evhub.NetMsgSecondHead{

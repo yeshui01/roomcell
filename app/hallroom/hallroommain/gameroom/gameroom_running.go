@@ -34,6 +34,8 @@ type RoomRunning struct {
 	ToPlayPlayers  []iroom.IGamePlayer
 	PlayerGameData map[int64]*RunningPlayerData
 	RunningRank    []int64
+	GameTime       int32
+	Distance       int32
 }
 
 func NewRoomRunning(roomID int64, globalObj iroom.IRoomGlobal) *RoomRunning {
@@ -170,6 +172,9 @@ func (roomObj *RoomRunning) resetDataForGameEnd() {
 		p.ReachTime = 0
 		p.ReachType = 0
 	}
+	for _, p := range roomObj.EmptyRoom.PlayerList {
+		p.SetReady(0)
+	}
 }
 
 func (roomObj *RoomRunning) initDataForReady() {
@@ -242,4 +247,11 @@ func (roomObj *RoomRunning) CheckGameEnd() {
 		roomObj.calcRank()
 		roomObj.ChangeStep(sconst.ERunningStepEnd)
 	}
+}
+func (roomObj *RoomRunning) ToRoomDetail() *pbclient.RoomData {
+	roomData := roomObj.EmptyRoom.ToRoomDetail()
+	// 游戏数据
+	roomData.RunningRoomData = roomObj.ToGameDetailData()
+	// 结果
+	return roomData
 }

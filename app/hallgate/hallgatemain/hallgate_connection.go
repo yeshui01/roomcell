@@ -31,7 +31,7 @@ func (hgc *HGateConnction) SendMsg(msg *evhub.NetMessage) bool {
 }
 func (hgc *HGateConnction) runRead() {
 	for {
-		hgc.WSConn.SetReadDeadline(time.Now().Add(time.Second * 600))
+		hgc.WSConn.SetReadDeadline(time.Now().Add(time.Second * 300))
 		msgType, msgData, err := hgc.WSConn.ReadMessage()
 		if err != nil {
 			var errInfo string = err.Error()

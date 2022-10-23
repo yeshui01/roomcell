@@ -2,7 +2,7 @@
  * @Author: mknight(tianyh)
  * @Mail: 824338670@qq.com
  * @Date: 2022-06-15 14:14:17
- * @LastEditTime: 2022-06-15 14:14:17
+ * @LastEditTime: 2022-10-09 11:32:38
  * @Brief:
  */
 package trframe
@@ -67,6 +67,7 @@ type TRFrame struct {
 	msgDispatcher  *tframedispatcher.FrameMsgDispatcher
 	keepNodeTime   int64
 	nowFrameTimeMs int64
+	msgDoneList    []func() // 消息处理后的执行列表
 }
 
 func newTRFrame(configPath string, nType int32, nIndex int32) *TRFrame {
@@ -378,6 +379,9 @@ func (tf *TRFrame) GetEvHub() *evhub.EventHub {
 }
 func (tf *TRFrame) GetFrameConfig() *tframeconfig.FrameConfig {
 	return tf.frameConfig
+}
+func (tf *TRFrame) AfterMsgJob(doJob func()) {
+	tf.msgDoneList = append(tf.msgDoneList, doJob)
 }
 func (tf *TRFrame) updateKeepNodeAlive(curTimeMs int64) {
 	if curTimeMs-tf.keepNodeTime < 3000 {

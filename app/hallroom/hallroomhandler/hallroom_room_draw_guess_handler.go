@@ -143,6 +143,16 @@ func HandleDrawGuessSetting(tmsgCtx *iframe.TMsgContext) (isok int32, retData in
 	}
 	roomDrawGuess.MaxTurnNum = req.MaxTurnNum
 	roomDrawGuess.DrawTime = req.DrawTime
+	// 推送刷新
+	pushSetting := &pbclient.ECMsgGamePushDrawSettingNotify{
+		MaxTurnNum: req.MaxTurnNum,
+		DrawTime:   req.DrawTime,
+	}
+	roomDrawGuess.BroadCastRoomMsg(hallPlayer.GetRoleID(),
+		protocol.ECMsgClassGame,
+		protocol.ECMsgGamePushDrawSetting,
+		pushSetting,
+	)
 	return protocol.ECodeSuccess, rep, iframe.EHandleContent
 }
 
@@ -178,7 +188,8 @@ func HandleDrawSelectWords(tmsgCtx *iframe.TMsgContext) (isok int32, retData int
 	if req.Idx < 0 || req.Idx >= int32(len(roomDrawGuess.WordsToSelect)) {
 		return protocol.ECodeParamError, rep, iframe.EHandleContent
 	}
-	roomDrawGuess.CurWords = roomDrawGuess.WordsToSelect[req.Idx]
+	roomDrawGuess.CurWords = roomDrawGuess.WordsToSelect[req.Idx].Words
+	roomDrawGuess.CurWordType = roomDrawGuess.WordsToSelect[req.Idx].WordType
 	roomDrawGuess.DrawEndTime = timeutil.NowTime() + int64(roomDrawGuess.DrawTime)
 	roomDrawGuess.ChangeStep(sconst.EDrawGuessStepDraw)
 	return protocol.ECodeSuccess, rep, iframe.EHandleContent

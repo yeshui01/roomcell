@@ -4,6 +4,7 @@ import "roomcell/pkg/configdata/csvdef"
 
 type DrawTypeWordsCfg struct {
 	WordsList []*csvdef.DrawGuess
+	WordType  int32
 }
 
 func (cfg *ConfigData) GetTypeWords(wordType int32) *DrawTypeWordsCfg {

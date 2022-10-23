@@ -1,11 +1,21 @@
+/*
+ * @Author: mknight(tianyh)
+ * @Mail: 824338670@qq.com
+ * @Date: 2022-10-08 15:15:19
+ * @LastEditTime: 2022-10-14 10:24:13
+ * @FilePath: \roomcell\app\account\accrouter\account_msg.go
+ */
 package accrouter
 
 // 注册
 type AccountRegisterReq struct {
-	UserName string `json:"user_name"`
-	Pswd     string `json:"pswd"`
-	Sign     string `json:"sign"`
-	CltX     int64  `json:"cltx"`
+	UserName     string `json:"user_name"`
+	Nickname     string `json:"nickname"`
+	Pswd         string `json:"pswd"`
+	ThirdPlat    string `json:"third_plat"`
+	ThirdAccount string `json:"third_account"`
+	Sign         string `json:"sign"`
+	CltX         int64  `json:"cltx"`
 }
 
 type AccountRegisterRsp struct {

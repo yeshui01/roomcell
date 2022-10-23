@@ -22,6 +22,7 @@ type RoomPlayer struct {
 	HallNode  *trnode.TRNodeInfo // 所在大厅节点
 	GateNode  *trnode.TRNodeInfo // 所在网关节点
 	HeartTime int64
+	Ready     int32
 }
 
 func NewRoomPlayer(roleID int64, nickName string) *RoomPlayer {
@@ -73,9 +74,17 @@ func (p *RoomPlayer) ToClientPlayerInfo() *pbclient.RoomPlayer {
 		RoleID:   p.RoleID,
 		Nickname: p.Nickname,
 		Icon:     p.Icon,
+		Ready:    p.Ready,
 	}
 }
 
 func (p *RoomPlayer) GetIcon() int32 {
 	return p.Icon
+}
+
+func (p *RoomPlayer) GetReady() int32 {
+	return p.Ready
+}
+func (p *RoomPlayer) SetReady(r int32) {
+	p.Ready = r
 }

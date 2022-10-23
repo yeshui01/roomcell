@@ -37,7 +37,7 @@ hallgateCfgs:
 halldataCfgs:
     - listenAddr: ":16022"
       logLevel: 5
-      localDBFile: "G:\\work\\dangwan\\fs_project\\roomcell\\bin\\dbdata\\hall_game.db"
+      localDBFile: "G:\\work\\external_project\\roomcell\\bin\\dbdata\\hall_game.db"
       gameDb:
         user: "tdev"
         host: "localhost"
@@ -53,7 +53,7 @@ hallroomCfgs:
       logLevel: 5
       #logPath: "E:\\tyh_work_card\\server_project\\roomcell\\bin\\logs"
       #csvPath: "E:\\tyh_work_card\\server_project\\roomcell\\bin\\csv"
-      csvPath: "G:\\work\\dangwan\\fs_project\\roomcell\\bin\\csv"
+      csvPath: "G:\\work\\external_project\\roomcell\\bin\\csv"
 hallroomMgrCfgs:
     - listenAddr: ":16042"
       logLevel: 5

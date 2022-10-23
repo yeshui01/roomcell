@@ -5,6 +5,7 @@ import (
 	"roomcell/pkg/loghlp"
 	"roomcell/pkg/pb/pbframe"
 	"roomcell/pkg/protocol"
+	"roomcell/pkg/sconst"
 	"roomcell/pkg/sensitivewds"
 	"roomcell/pkg/timeutil"
 	"roomcell/pkg/trframe"
@@ -105,7 +106,7 @@ func (mgr *HallRoomGlobal) updateIdlePlayer(curTime int64) {
 		if r.HeartTime == 0 {
 			r.HeartTime = curTime
 		}
-		if curTime-r.HeartTime >= 600 {
+		if curTime-r.HeartTime >= sconst.PlayerHeartTime {
 			loghlp.Warnf("updateIdleRoomPlayer(%d) heart timeout", r.GetRoleID())
 			delList = append(delList, r)
 		}

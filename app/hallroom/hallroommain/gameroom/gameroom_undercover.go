@@ -234,7 +234,9 @@ func (roomObj *RoomUndercover) initPlayerNumber() {
 		playerData.Ready = 0
 		roomObj.TalkerCacheList[i] = playerData
 	}
-
+	for _, p := range roomObj.EmptyRoom.PlayerList {
+		p.SetReady(0)
+	}
 	roomObj.TalkRoleID = 0
 	roomObj.TalkRoleNumber = 0
 	roomObj.IsUndercoverSucc = false
@@ -320,6 +322,7 @@ func (roomObj *RoomUndercover) ToGameDetailData() *pbclient.RoomUndercoverDetail
 			IsOut:        v.IsOut,
 			PlayerNumber: v.PlayNumber,
 			VoteNum:      v.VoteNum,
+			Nickname:     v.Nickname,
 		}
 	}
 	gameData.UnderWin = roomObj.IsUndercoverSucc
@@ -532,7 +535,9 @@ func (roomObj *RoomUndercover) resetDataForGameEnd() {
 		playerData.Ready = 0
 		roomObj.TalkerCacheList[i] = playerData
 	}
-
+	for _, p := range roomObj.EmptyRoom.PlayerList {
+		p.SetReady(0)
+	}
 	roomObj.TalkRoleID = 0
 	roomObj.TalkRoleNumber = 0
 	roomObj.IsUndercoverSucc = false

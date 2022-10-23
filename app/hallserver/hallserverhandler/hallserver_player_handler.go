@@ -27,7 +27,7 @@ func HandlePlayerLoginHall(tmsgCtx *iframe.TMsgContext) (isok int32, retData int
 	if player != nil {
 		// 如果玩家在线
 		if player.IsOnline {
-			if trframe.GetFrameSysNowTime()-player.GetHeartTime() < 45 {
+			if trframe.GetFrameSysNowTime()-player.GetHeartTime() < 5 {
 				// 玩家已经在线
 				loghlp.Warnf("player(%d) has online, cant repeated login", req.UserID)
 				return protocol.ECodeRoleHasOnline, rep, iframe.EHandleContent
@@ -89,7 +89,10 @@ func HandlePlayerLoginHall(tmsgCtx *iframe.TMsgContext) (isok int32, retData int
 		// 这里后续处理放到下一帧处理
 		player.IsOnline = true
 		player.UpdateHeartTime(timeutil.NowTime())
-		hallGlobal.PostJob(func() {
+		// hallGlobal.PostJob(func() {
+		// 	hallGlobal.HandlePlayerOnline(player)
+		// })
+		trframe.AfterMsgJob(func() {
 			hallGlobal.HandlePlayerOnline(player)
 		})
 		return protocol.ECodeSuccess, rep, iframe.EHandleContent
@@ -128,7 +131,11 @@ func HandlePlayerLoginHall(tmsgCtx *iframe.TMsgContext) (isok int32, retData int
 		// 这里后续处理放到下一帧处理
 		player.IsOnline = true
 		player.UpdateHeartTime(timeutil.NowTime())
-		hallGlobal.PostJob(func() {
+		// hallGlobal.PostJob(func() {
+		// 	player.UpdateHeartTime(timeutil.NowTime())
+		// 	hallGlobal.HandlePlayerOnline(player)
+		// })
+		trframe.AfterMsgJob(func() {
 			player.UpdateHeartTime(timeutil.NowTime())
 			hallGlobal.HandlePlayerOnline(player)
 		})

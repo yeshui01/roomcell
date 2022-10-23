@@ -18,7 +18,7 @@ func (s *HallRoomGlobal) CreateRoom(roomID int64, roomType int32, roleID int64) 
 	case sconst.EGameRoomTypeDrawGuess:
 		{
 			newRoom = gameroom.NewRoomDrawGuess(roomID, s)
-			newRoom.SetMasterID(roleID)
+
 			break
 		}
 	case sconst.EGameRoomTypeChat:
@@ -57,6 +57,7 @@ func (s *HallRoomGlobal) CreateRoom(roomID int64, roomType int32, roleID int64) 
 	}
 	if newRoom != nil {
 		s.roomList[roomID] = newRoom
+		newRoom.SetMasterID(roleID)
 	}
 	return newRoom
 }

@@ -196,7 +196,7 @@
             "program": "${workspaceFolder}/cmd/room_robot/main.go",
             "args":[
                 "--hostAddr=localhost:15000",
-                "--roomId=30001",
+                "--roomId=744410",
                 "--nameId=3",
                 "--robotNum=1"
             ]

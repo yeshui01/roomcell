@@ -1,0 +1,50 @@
+accountCfgs:
+  - listenAddr: ":15000"
+    logLevel: 5
+zoneID: 1
+gateCfgs:
+      - listenAddr: ":16000"
+        logLevel: 5
+        logPath: "E:\\tyh_work_card\\server_project\\roomcell\\bin\\logs"
+      - listenAddr: ":16001"
+        logLevel: 5
+        logPath: "E:\\tyh_work_card\\server_project\\roomcell\\bin\\logs"
+rootCfgs:
+    - listenAddr: ":16011"
+      logLevel: 5
+      logPath: "E:\\tyh_work_card\\server_project\\roomcell\\bin\\logs"
+
+
+### 大厅类型的服务器
+# hallserver
+hallserverCfgs:
+    - listenAddr: ":16011"
+      logLevel: 5
+      #logPath: "E:\\tyh_work_card\\server_project\\roomcell\\bin\\logs"
+# hallgate
+hallgateCfgs:
+    - listenAddr: ":16021"
+      logLevel: 5
+      wsListenAddr: "localhost:7200"
+      #logPath: "E:\\tyh_work_card\\server_project\\roomcell\\bin\\logs"
+# halldata
+halldataCfgs:
+    - listenAddr: ":16022"
+      logLevel: 5
+      localDBFile: "./dbdata\\hall_game.db"
+      #localDBFile: "G:\\work\\dangwan\\fs_project\\roomcell\\bin\\dbdata\\hall_game.db"
+      #localDBFile: "E:\\tyh_work_card\\server_project\\roomcell\\bin\\dbdata\\hall_game.db"
+      #logPath: "E:\\tyh_work_card\\server_project\\roomcell\\bin\\logs"
+
+# hallroom
+hallroomCfgs:
+    - listenAddr: ":16032"
+      logLevel: 5
+      #logPath: "E:\\tyh_work_card\\server_project\\roomcell\\bin\\logs"
+
+hallroomMgrCfgs:
+    - listenAddr: ":16042"
+      logLevel: 5
+      #logPath: "E:\\tyh_work_card\\server_project\\roomcell\\bin\\logs"
+  
+  

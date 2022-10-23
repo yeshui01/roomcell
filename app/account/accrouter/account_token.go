@@ -1,3 +1,10 @@
+/*
+ * @Author: mknight(tianyh)
+ * @Mail: 824338670@qq.com
+ * @Date: 2022-10-08 15:15:19
+ * @LastEditTime: 2022-10-10 13:59:28
+ * @FilePath: \roomcell\app\account\accrouter\account_token.go
+ */
 package accrouter
 
 import (
@@ -7,13 +14,14 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-func genJwtToken(userID int64, userName string, dataZone int32) (string, error) {
+func genJwtToken(userID int64, userName string, nickName string, dataZone int32) (string, error) {
 	j := &crossdef.JWT{
 		[]byte(crossdef.SignKey),
 	}
 	tokenTime := int64(3600 * 24) // 默认24小时
 	claims := crossdef.CustomClaims{
 		Account:       userName,
+		Nickname:      nickName,
 		LastLoginTime: 0,
 		CchId:         "",
 		DataZone:      dataZone,

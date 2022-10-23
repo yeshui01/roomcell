@@ -18,12 +18,13 @@ enum EUndercoverStep
 message UndercoverPlayerGameData
 {
     int64 RoleID = 1;
-    bool IsOut = 2;         // 是否出局
-    string SelfWords = 3;   // 自己的词汇
-    bool IsTalked = 4;      // 本次是否已经发言了
-    int32 PlayerNumber = 5; // 玩家编号
-    int32 Ready = 6;        // 准备状态 0-未准备 1-准备了
-    int32 VoteNum = 7;      // 本次得票数
+    string Nickname = 2;    // 昵称
+    bool IsOut = 3;         // 是否出局
+    string SelfWords = 4;   // 自己的词汇
+    bool IsTalked = 5;      // 本次是否已经发言了
+    int32 PlayerNumber = 6; // 玩家编号
+    int32 Ready = 7;        // 准备状态 0-未准备 1-准备了
+    int32 VoteNum = 8;      // 本次得票数
 }
 
 // 房间游戏数据
