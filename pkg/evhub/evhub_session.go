@@ -121,7 +121,7 @@ func (s *NetSession) startReadWork(hub *EventHub) {
 			if hd.HasSecond > 0 {
 				_, err := io.ReadFull(s.netConn, s.secondHeaderBytes)
 				if err != nil {
-					logrus.Errorf("sessionID:%d read failed, %s", s.sessionID, err)
+					logrus.Errorf("sessionID:%d read failed2, %s,len:%d,msg(%d_%d)", s.sessionID, err.Error(), hd.Len, hd.MsgClass, hd.MsgType)
 					hub.PostCommand(HubCmdNetEvent, NetEventClose, s)
 					break
 				}
@@ -132,7 +132,8 @@ func (s *NetSession) startReadWork(hub *EventHub) {
 			messageBody := make([]byte, hd.Len-MsgHeadSize)
 			_, err = io.ReadFull(s.netConn, messageBody)
 			if err != nil {
-				logrus.WithField("sessionID", s.sessionID).Errorf("read msgbody failed, %s", err)
+				logrus.WithField("sessionID", s.sessionID).Errorf("read msgbody failed, %s,len:%d,msg(%d_%d)", err, hd.Len, hd.MsgClass, hd.MsgType)
+				hub.PostCommand(HubCmdNetEvent, NetEventClose, s)
 				break
 			}
 			netMsg := NewNetMessage(hd, messageBody)
